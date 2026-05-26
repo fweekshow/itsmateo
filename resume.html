@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matthew Ross Meakin — Resume</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      font-size: 10.5pt;
+      color: #1a1a1a;
+      background: #fff;
+      max-width: 780px;
+      margin: 40px auto;
+      padding: 40px 48px;
+      line-height: 1.5;
+    }
+
+    /* ── Header ── */
+    header { margin-bottom: 20px; }
+
+    h1 {
+      font-family: 'Arial', sans-serif;
+      font-size: 22pt;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #111;
+    }
+
+    .tagline {
+      font-family: 'Arial', sans-serif;
+      font-size: 9pt;
+      color: #555;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+      margin-bottom: 10px;
+    }
+
+    .contact {
+      font-family: 'Arial', sans-serif;
+      font-size: 9pt;
+      color: #333;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+    }
+
+    .contact a { color: #333; text-decoration: none; border-bottom: 1px solid #ccc; }
+
+    hr.rule {
+      border: none;
+      border-top: 2px solid #1a1a1a;
+      margin: 16px 0 0 0;
+    }
+
+    /* ── Section ── */
+    section { margin-top: 20px; }
+
+    h2 {
+      font-family: 'Arial', sans-serif;
+      font-size: 8pt;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #111;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
+    }
+
+    /* ── Summary ── */
+    .summary p {
+      font-size: 10pt;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    /* ── Entry ── */
+    .entry { margin-bottom: 14px; }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .entry-title {
+      font-family: 'Arial', sans-serif;
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #111;
+    }
+
+    .entry-date {
+      font-family: 'Arial', sans-serif;
+      font-size: 9pt;
+      color: #666;
+      white-space: nowrap;
+    }
+
+    .entry-org {
+      font-family: 'Arial', sans-serif;
+      font-size: 9.5pt;
+      color: #444;
+      margin-bottom: 5px;
+    }
+
+    .entry-org a {
+      color: #444;
+      text-decoration: none;
+      border-bottom: 1px solid #ddd;
+    }
+
+    ul.bullets {
+      padding-left: 18px;
+      list-style: disc;
+    }
+
+    ul.bullets li {
+      font-size: 10pt;
+      color: #222;
+      margin-bottom: 3px;
+      line-height: 1.5;
+    }
+
+    /* ── Skills ── */
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill-tag {
+      font-family: 'Arial', sans-serif;
+      font-size: 8.5pt;
+      background: #f2f2f2;
+      color: #333;
+      padding: 3px 9px;
+      border-radius: 3px;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body { margin: 0; padding: 28px 36px; max-width: 100%; }
+      a { border-bottom: none !important; }
+      .skill-tag { border: 1px solid #ccc; background: #fff; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Matthew Ross Meakin</h1>
+  <div class="tagline">Founder · Builder · Operator &nbsp;|&nbsp; Los Angeles, CA &nbsp;|&nbsp; Recovery Tech · Web3 · AI</div>
+  <div class="contact">
+    <span>meakin.matt@gmail.com</span>
+    <span>mattm@beora.ai</span>
+    <a href="https://linkedin.com/in/matthew-meakin-72592219a" target="_blank">LinkedIn</a>
+    <a href="https://github.com/fweekshow" target="_blank">GitHub</a>
+    <a href="https://beora.care" target="_blank">beora.care</a>
+    <a href="https://basemate.app" target="_blank">basemate.app</a>
+  </div>
+  <hr class="rule" />
+</header>
+
+<!-- SUMMARY -->
+<section class="summary">
+  <h2>Profile</h2>
+  <p>
+    Started over on Skid Row. Homeless and in active addiction until a patient scholarship
+    at a treatment facility changed everything. Worked every role in that building —
+    Technician, Med Room Manager, Director of Operations — taught himself to code along the
+    way, and made CTO. Left Hollywood's Art Department on <em>Deadwood</em> at sixteen to build
+    a career in film and television before recovery redirected everything.
+  </p>
+  <p style="margin-top: 8px;">
+    Now a founder building at the intersection of AI, behavioral health, and Web3.
+    Base Batches 002 alumnus. Built two official onchain agents for Coinbase, deployed
+    at live events. Beora Care is a HIPAA-compliant AI platform for addiction recovery —
+    built from lived experience, not a case study.
+  </p>
+</section>
+
+<!-- PROJECTS -->
+<section>
+  <h2>Selected Projects</h2>
+
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-title">Beora Care</span>
+      <span class="entry-date">2024 – Present</span>
+    </div>
+    <div class="entry-org">
+      Founder &amp; CTO &nbsp;·&nbsp; <a href="https://beora.care" target="_blank">beora.care</a>
+    </div>
+    <ul class="bullets">
+      <li>AI-powered behavioral health platform for addiction recovery programs — CareWiki (staff dashboard) + iOS agent for clients</li>
+      <li>Designed three-tier PHI architecture enforcing 42 CFR Part 2 compliance; built human-in-the-loop review pipeline with clinician trust graduation</li>
+      <li>Stack: TypeScript · Next.js · Prisma · LangChain · Vertex AI (Gemini) · XMTP · GCP</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-title">Basemate</span>
+      <span class="entry-date">2023 – Present</span>
+    </div>
+    <div class="entry-org">
+      Founder &nbsp;·&nbsp; <a href="https://basemate.app" target="_blank">basemate.app</a>
+      &nbsp;·&nbsp; Base Batches 002 (Coinbase Accelerator)
+    </div>
+    <ul class="bullets">
+      <li>Accepted into Base Batches 002, Coinbase's onchain startup accelerator</li>
+      <li>Built two official onchain AI agents for Coinbase, deployed and used at live Coinbase events</li>
+      <li>Building tooling for onchain developers on the Base L2 network</li>
+    </ul>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section>
+  <h2>Experience</h2>
+
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-title">Interventionist &amp; Sober Companion</span>
+      <span class="entry-date">2023 – Present</span>
+    </div>
+    <div class="entry-org">Self-Employed &nbsp;·&nbsp; Los Angeles, CA</div>
+    <ul class="bullets">
+      <li>Provide private 1-on-1 recovery support for high-profile individuals</li>
+      <li>Coordinate crisis interventions, treatment placement, and post-discharge continuity of care</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-title">Chief Technology Officer</span>
+      <span class="entry-date">2021 – 2024</span>
+    </div>
+    <div class="entry-org">Evergreen Fund &nbsp;·&nbsp; Los Angeles, CA</div>
+    <ul class="bullets">
+      <li>Entered as a patient on scholarship after homelessness and addiction; never left — advanced through every role in the organization over three years</li>
+      <li>As CTO: owned all technology, built internal systems from scratch, and led the facility's digital transformation — self-taught, no formal CS background</li>
+      <li>As Director of Operations: ran day-to-day operations, staffing, and clinical workflow design for the full facility</li>
+      <li>As Med Room Manager: oversaw controlled substance inventory, DEA compliance, and distribution protocols</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-title">Art Department</span>
+      <span class="entry-date">Early career</span>
+    </div>
+    <div class="entry-org">HBO's <em>Deadwood</em> &nbsp;·&nbsp; Hollywood, CA</div>
+    <ul class="bullets">
+      <li>Left high school to work in the Art Department on HBO's <em>Deadwood</em></li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-title">Transportation Captain &amp; Driver</span>
+      <span class="entry-date">2019 – 2023</span>
+    </div>
+    <div class="entry-org">Teamsters Hollywood Local 399 &nbsp;·&nbsp; Los Angeles, CA</div>
+    <ul class="bullets">
+      <li>Productions include: <em>The Matrix Resurrections</em> (Warner Bros.), <em>Grace &amp; Frankie</em> (Netflix), Walmart national commercial campaigns</li>
+      <li>Coordinated on-set logistics, scheduling, and multi-vehicle transportation operations</li>
+    </ul>
+  </div>
+
+</section>
+
+<!-- EDUCATION -->
+<section>
+  <h2>Education</h2>
+
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-title">California Institute of the Arts (CalArts)</span>
+      <span class="entry-date">Attended</span>
+    </div>
+    <div class="entry-org">Valencia, CA</div>
+  </div>
+
+</section>
+
+<!-- COMMUNITY -->
+<section>
+  <h2>Community Leadership</h2>
+
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-title">Founder</span>
+      <span class="entry-date">Ongoing</span>
+    </div>
+    <div class="entry-org">Overdose LA &nbsp;·&nbsp; Los Angeles, CA</div>
+    <ul class="bullets">
+      <li>Founded and operate a street-level homeless outreach program in Los Angeles</li>
+      <li>Distribute food and harm reduction supplies (naloxone, clean equipment) to unhoused individuals</li>
+    </ul>
+  </div>
+
+</section>
+
+<!-- SKILLS -->
+<section>
+  <h2>Skills &amp; Technologies</h2>
+  <div class="skills-grid">
+    <span class="skill-tag">TypeScript</span>
+    <span class="skill-tag">Next.js</span>
+    <span class="skill-tag">Node.js</span>
+    <span class="skill-tag">Prisma / PostgreSQL</span>
+    <span class="skill-tag">LangChain</span>
+    <span class="skill-tag">Vertex AI (Gemini)</span>
+    <span class="skill-tag">GCP</span>
+    <span class="skill-tag">XMTP</span>
+    <span class="skill-tag">Web3 / Base L2</span>
+    <span class="skill-tag">Onchain Agents</span>
+    <span class="skill-tag">Product Strategy</span>
+    <span class="skill-tag">Clinical Operations</span>
+    <span class="skill-tag">HIPAA / 42 CFR Part 2</span>
+    <span class="skill-tag">Team Leadership</span>
+    <span class="skill-tag">Crisis Intervention</span>
+  </div>
+</section>
+
+</body>
+</html>
