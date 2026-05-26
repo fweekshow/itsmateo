@@ -1,336 +1,585 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Matthew Ross Meakin — Resume</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="utf-8" />
+<title>Matthew Ross Meakin — itsmateo.wtf</title>
+<meta name="viewport" content="width=816" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --ink: #0B0B0F;
+  --ink-2: #1E1E24;
+  --ink-3: #5A5A64;
+  --ink-4: #A3A3AC;
+  --ink-5: #D4D4D8;
+  --bone: #FAFAF7;
+  --bone-2: #F2F2EE;
+  --bone-3: #E8E8E3;
+  --paper: #FFFFFF;
+  --coral: #E06148;
+  --coral-deep: #B84830;
+  --coral-tint: #FCE9E3;
+  --iodine: #C8D900;
+  --iodine-deep: #7A8A00;
+  --iodine-tint: #F4F6D2;
+  --signal-ok: #0B7A3B;
+  --signal-warn: #C67A00;
+  --signal-crit: #B3261E;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --font-wiki: "Newsreader", Georgia, serif;
+}
 
-    body {
-      font-family: 'Georgia', serif;
-      font-size: 10.5pt;
-      color: #1a1a1a;
-      background: #fff;
-      max-width: 780px;
-      margin: 40px auto;
-      padding: 40px 48px;
-      line-height: 1.5;
-    }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ── Header ── */
-    header { margin-bottom: 20px; }
+html, body {
+  background: var(--bone-3);
+  font-family: var(--font-wiki);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
 
-    h1 {
-      font-family: 'Arial', sans-serif;
-      font-size: 22pt;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #111;
-    }
+.page {
+  width: 816px;
+  min-height: 1056px;
+  margin: 0 auto;
+  background: var(--paper);
+  padding: 44px 56px 44px;
+  position: relative;
+}
 
-    .tagline {
-      font-family: 'Arial', sans-serif;
-      font-size: 9pt;
-      color: #555;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-top: 2px;
-      margin-bottom: 10px;
-    }
+/* Top chrome — namespace strip */
+.chrome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--ink-5);
+  margin-bottom: 18px;
+}
+.chrome .ns { color: var(--ink); font-weight: 600; }
+.chrome .live { display: inline-flex; align-items: center; gap: 6px; color: var(--signal-crit); }
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--signal-crit);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(.85); } }
 
-    .contact {
-      font-family: 'Arial', sans-serif;
-      font-size: 9pt;
-      color: #333;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 18px;
-    }
+/* Title block */
+.title-block {
+  position: relative;
+  margin-bottom: 8px;
+}
+.title-block h1 {
+  font-family: var(--font-wiki);
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.title-block .latin {
+  font-family: var(--font-wiki);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-3);
+  margin-top: 4px;
+}
+.title-rule {
+  border: 0;
+  border-top: 1px solid var(--ink);
+  margin: 10px 0 0;
+}
 
-    .contact a { color: #333; text-decoration: none; border-bottom: 1px solid #ccc; }
+/* Layout — body left, infobox right */
+.body-grid {
+  display: grid;
+  grid-template-columns: 1fr 262px;
+  gap: 22px;
+  margin-top: 16px;
+}
 
-    hr.rule {
-      border: none;
-      border-top: 2px solid #1a1a1a;
-      margin: 16px 0 0 0;
-    }
+/* Article */
+article { font-size: 14.5px; line-height: 1.55; color: var(--ink); }
+article p { margin-bottom: 9px; }
+article p .lede {
+  font-weight: 600;
+}
+article a, .infobox a {
+  color: var(--coral-deep);
+  text-decoration: none;
+  border-bottom: 1px solid var(--coral-deep);
+}
+article a:hover { background: var(--coral-tint); }
+sup.fn {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--coral-deep);
+  vertical-align: super;
+  line-height: 0;
+  margin-left: 1px;
+  cursor: pointer;
+}
 
-    /* ── Section ── */
-    section { margin-top: 20px; }
+article h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.005em;
+  border-bottom: 1px solid var(--ink-5);
+  padding-bottom: 3px;
+  margin: 16px 0 8px;
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+article h2 .edit {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
 
-    h2 {
-      font-family: 'Arial', sans-serif;
-      font-size: 8pt;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: #111;
-      margin-bottom: 10px;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 4px;
-    }
+/* Contents box */
+.contents {
+  background: var(--bone-2);
+  border: 1px solid var(--ink-5);
+  padding: 8px 12px 10px;
+  margin: 10px 0 14px;
+  font-family: var(--font-wiki);
+  font-size: 13px;
+  max-width: 320px;
+}
+.contents .ch {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--ink-5);
+  padding-bottom: 3px;
+  margin-bottom: 5px;
+}
+.contents ol { list-style: none; counter-reset: c; }
+.contents ol li {
+  counter-increment: c;
+  padding: 1px 0;
+  display: flex;
+}
+.contents ol li::before {
+  content: counter(c) ".";
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  min-width: 22px;
+}
+.contents a { color: var(--coral-deep); border-bottom: none; }
+.contents a:hover { text-decoration: underline; }
 
-    /* ── Summary ── */
-    .summary p {
-      font-size: 10pt;
-      color: #222;
-      line-height: 1.6;
-    }
+/* Role table */
+.roles {
+  font-family: var(--font-wiki);
+  font-size: 13.5px;
+  line-height: 1.45;
+  margin-top: 4px;
+}
+.role {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 14px;
+  padding: 7px 0;
+  border-bottom: 1px dotted var(--ink-5);
+}
+.role:last-child { border-bottom: none; }
+.role .when {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  padding-top: 3px;
+  letter-spacing: 0.02em;
+}
+.role .what .title {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 14.5px;
+}
+.role .what .org {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  margin-top: 1px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.role .what .desc {
+  margin-top: 3px;
+  color: var(--ink-2);
+}
+.role .what .desc .tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: var(--coral-tint);
+  color: var(--coral-deep);
+  padding: 1px 4px;
+  border: 1px solid var(--coral-deep);
+  margin-right: 3px;
+}
 
-    /* ── Entry ── */
-    .entry { margin-bottom: 14px; }
+/* Infobox — Wikipedia right-rail */
+.infobox {
+  background: var(--bone-2);
+  border: 1px solid var(--ink);
+  font-family: var(--font-wiki);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+.infobox .ib-head {
+  background: var(--ink);
+  color: var(--bone);
+  padding: 7px 10px 8px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 13.5px;
+  letter-spacing: -0.005em;
+  text-align: center;
+}
+.infobox .ib-head .sub {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-4);
+  margin-top: 2px;
+}
+.infobox .photo-frame {
+  background: var(--paper);
+  padding: 8px 8px 6px;
+  border-bottom: 1px solid var(--ink);
+}
+.infobox .photo {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--bone-3);
+  border: 1px solid var(--ink-5);
+  background-image: url("assets/mateo-1.avif");
+  background-size: cover;
+  background-position: 50% 25%;
+}
+.infobox .caption {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 5px;
+  text-align: center;
+}
+.infobox dl {
+  padding: 4px 0 6px;
+}
+.infobox dt {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  background: var(--bone-3);
+  padding: 4px 10px;
+  border-top: 1px solid var(--ink-5);
+}
+.infobox dd {
+  padding: 5px 10px 6px;
+  font-size: 12.5px;
+  color: var(--ink);
+  border-top: 1px solid var(--ink-5);
+}
+.infobox dd .small {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  margin-top: 1px;
+}
 
-    .entry-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
+/* Status indicators row in infobox */
+.status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px 10px 10px;
+  border-top: 1px solid var(--ink-5);
+  background: var(--paper);
+}
+.status {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border: 1px solid currentColor;
+}
+.status-ok { color: var(--signal-ok); background: #E3F3E8; }
+.status-live { color: var(--coral-deep); background: var(--coral-tint); }
+.status-rec { color: var(--iodine-deep); background: var(--iodine-tint); }
 
-    .entry-title {
-      font-family: 'Arial', sans-serif;
-      font-size: 10.5pt;
-      font-weight: 700;
-      color: #111;
-    }
+/* Footer — references */
+.refs {
+  margin-top: 18px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ink-5);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  line-height: 1.6;
+}
+.refs .ref-head {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.refs ol { list-style: none; counter-reset: r; }
+.refs li {
+  counter-increment: r;
+  display: flex;
+  gap: 8px;
+  padding: 1px 0;
+}
+.refs li::before {
+  content: "^" counter(r) ".";
+  color: var(--coral-deep);
+  min-width: 22px;
+}
+.refs a { color: var(--ink-3); border-bottom: 1px dotted var(--ink-4); text-decoration: none; }
 
-    .entry-date {
-      font-family: 'Arial', sans-serif;
-      font-size: 9pt;
-      color: #666;
-      white-space: nowrap;
-    }
+/* Hatfoot — page footer with edit-style metadata */
+.hatfoot {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-4);
+}
 
-    .entry-org {
-      font-family: 'Arial', sans-serif;
-      font-size: 9.5pt;
-      color: #444;
-      margin-bottom: 5px;
-    }
+.parrot-mark {
+  width: 14px; height: 14px;
+  vertical-align: -3px;
+  display: inline-block;
+}
 
-    .entry-org a {
-      color: #444;
-      text-decoration: none;
-      border-bottom: 1px solid #ddd;
-    }
-
-    ul.bullets {
-      padding-left: 18px;
-      list-style: disc;
-    }
-
-    ul.bullets li {
-      font-size: 10pt;
-      color: #222;
-      margin-bottom: 3px;
-      line-height: 1.5;
-    }
-
-    /* ── Skills ── */
-    .skills-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .skill-tag {
-      font-family: 'Arial', sans-serif;
-      font-size: 8.5pt;
-      background: #f2f2f2;
-      color: #333;
-      padding: 3px 9px;
-      border-radius: 3px;
-    }
-
-    /* ── Print ── */
-    @media print {
-      body { margin: 0; padding: 28px 36px; max-width: 100%; }
-      a { border-bottom: none !important; }
-      .skill-tag { border: 1px solid #ccc; background: #fff; }
-    }
-  </style>
+@media print {
+  html, body { background: white; }
+  .page { box-shadow: none; padding: 32px 44px; min-height: auto; }
+  @page { size: letter; margin: 0; }
+}
+</style>
 </head>
 <body>
 
-<header>
-  <h1>Matthew Ross Meakin</h1>
-  <div class="tagline">Founder · Builder · Operator &nbsp;|&nbsp; Los Angeles, CA &nbsp;|&nbsp; Recovery Tech · Web3 · AI</div>
-  <div class="contact">
-    <span>meakin.matt@gmail.com</span>
-    <span>mattm@beora.ai</span>
-    <a href="https://linkedin.com/in/matthew-meakin-72592219a" target="_blank">LinkedIn</a>
-    <a href="https://github.com/fweekshow" target="_blank">GitHub</a>
-    <a href="https://beora.care" target="_blank">beora.care</a>
-    <a href="https://basemate.app" target="_blank">basemate.app</a>
-  </div>
-  <hr class="rule" />
-</header>
+<div class="page">
 
-<!-- SUMMARY -->
-<section class="summary">
-  <h2>Profile</h2>
-  <p>
-    Started over on Skid Row. Homeless and in active addiction until a patient scholarship
-    at a treatment facility changed everything. Worked every role in that building —
-    Technician, Med Room Manager, Director of Operations — taught himself to code along the
-    way, and made CTO. Left Hollywood's Art Department on <em>Deadwood</em> at sixteen to build
-    a career in film and television before recovery redirected everything.
-  </p>
-  <p style="margin-top: 8px;">
-    Now a founder building at the intersection of AI, behavioral health, and Web3.
-    Base Batches 002 alumnus. Built two official onchain agents for Coinbase, deployed
-    at live events. Beora Care is a HIPAA-compliant AI platform for addiction recovery —
-    built from lived experience, not a case study.
-  </p>
-</section>
-
-<!-- PROJECTS -->
-<section>
-  <h2>Selected Projects</h2>
-
-  <div class="entry">
-    <div class="entry-header">
-      <span class="entry-title">Beora Care</span>
-      <span class="entry-date">2024 – Present</span>
-    </div>
-    <div class="entry-org">
-      Founder &amp; CTO &nbsp;·&nbsp; <a href="https://beora.care" target="_blank">beora.care</a>
-    </div>
-    <ul class="bullets">
-      <li>AI-powered behavioral health platform for addiction recovery programs — CareWiki (staff dashboard) + iOS agent for clients</li>
-      <li>Designed three-tier PHI architecture enforcing 42 CFR Part 2 compliance; built human-in-the-loop review pipeline with clinician trust graduation</li>
-      <li>Stack: TypeScript · Next.js · Prisma · LangChain · Vertex AI (Gemini) · XMTP · GCP</li>
-    </ul>
+  <div class="chrome">
+    <div><span class="ns">PERSON</span> · article · talk · history · watch</div>
+    <div class="live"><span class="dot"></span> last edit · 2026·05·26</div>
   </div>
 
-  <div class="entry">
-    <div class="entry-header">
-      <span class="entry-title">Basemate</span>
-      <span class="entry-date">2023 – Present</span>
-    </div>
-    <div class="entry-org">
-      Founder &nbsp;·&nbsp; <a href="https://basemate.app" target="_blank">basemate.app</a>
-      &nbsp;·&nbsp; Base Batches 002 (Coinbase Accelerator)
-    </div>
-    <ul class="bullets">
-      <li>Accepted into Base Batches 002, Coinbase's onchain startup accelerator</li>
-      <li>Built two official onchain AI agents for Coinbase, deployed and used at live Coinbase events</li>
-      <li>Building tooling for onchain developers on the Base L2 network</li>
-    </ul>
-  </div>
-</section>
-
-<!-- EXPERIENCE -->
-<section>
-  <h2>Experience</h2>
-
-  <div class="entry">
-    <div class="entry-header">
-      <span class="entry-title">Interventionist &amp; Sober Companion</span>
-      <span class="entry-date">2023 – Present</span>
-    </div>
-    <div class="entry-org">Self-Employed &nbsp;·&nbsp; Los Angeles, CA</div>
-    <ul class="bullets">
-      <li>Provide private 1-on-1 recovery support for high-profile individuals</li>
-      <li>Coordinate crisis interventions, treatment placement, and post-discharge continuity of care</li>
-    </ul>
+  <div class="title-block">
+    <h1>Matthew Ross Meakin</h1>
+    <div class="latin">From <em>itsmateo.wtf</em>, the personal knowledge base.</div>
+    <hr class="title-rule" />
   </div>
 
-  <div class="entry">
-    <div class="entry-header">
-      <span class="entry-title">Chief Technology Officer</span>
-      <span class="entry-date">2021 – 2024</span>
-    </div>
-    <div class="entry-org">Evergreen Fund &nbsp;·&nbsp; Los Angeles, CA</div>
-    <ul class="bullets">
-      <li>Entered as a patient on scholarship after homelessness and addiction; never left — advanced through every role in the organization over three years</li>
-      <li>As CTO: owned all technology, built internal systems from scratch, and led the facility's digital transformation — self-taught, no formal CS background</li>
-      <li>As Director of Operations: ran day-to-day operations, staffing, and clinical workflow design for the full facility</li>
-      <li>As Med Room Manager: oversaw controlled substance inventory, DEA compliance, and distribution protocols</li>
-    </ul>
+  <div class="body-grid">
+
+    <article>
+
+      <p>
+        <span class="lede">Matthew Ross Meakin</span> (also <em>Mateo</em>; b. Los Angeles) is an American founder, software engineer, and recovery operator. He is the founder and CTO of <a href="https://beora.care">Beora Care</a><sup class="fn">[1]</sup>, a HIPAA‑compliant clinical platform for behavioral health, and the founder of <a href="https://basemate.app">Basemate</a><sup class="fn">[2]</sup>, accepted into Base Batches 002, Coinbase's onchain accelerator.<sup class="fn">[3]</sup>
+      </p>
+      <p>
+        Meakin entered the addiction‑treatment industry as a patient on scholarship after a period of homelessness on Skid Row. He advanced through every clinical and operational role at the facility — Technician, Med Room Manager, Director of Operations — and taught himself to code, eventually serving as the organization's Chief Technology Officer. He is self‑taught, with no formal computer‑science background.
+      </p>
+
+      <div class="contents">
+        <div class="ch">Contents <span style="float:right;font-family:var(--font-wiki);text-transform:none;letter-spacing:0;color:var(--ink-3);">[hide]</span></div>
+        <ol>
+          <li><a href="#now">Current work</a></li>
+          <li><a href="#career">Career</a></li>
+          <li><a href="#community">Community</a></li>
+          <li><a href="#refs">References &amp; external links</a></li>
+        </ol>
+      </div>
+
+      <h2 id="now">Current work <span class="edit">[ edit ]</span></h2>
+      <div class="roles">
+        <div class="role">
+          <div class="when">2024 – present</div>
+          <div class="what">
+            <div class="title">Founder &amp; CTO — Beora Care</div>
+            <div class="org">CareWiki + Beora iOS · TypeScript · LangChain · Vertex AI · XMTP</div>
+            <div class="desc">
+              <span class="tag">PHI</span>
+              AI platform for addiction recovery programs. Designed a three‑tier PHI architecture enforcing 42 CFR Part 2; built a human‑in‑the‑loop review pipeline with clinician trust graduation. Built from lived experience, not a case study.
+            </div>
+          </div>
+        </div>
+        <div class="role">
+          <div class="when">2023 – present</div>
+          <div class="what">
+            <div class="title">Founder — Basemate</div>
+            <div class="org">Base Batches 002 (Coinbase) · onchain agents · Base L2</div>
+            <div class="desc">
+              <span class="tag">Onchain</span>
+              <span class="tag">Agents</span>
+              Tooling for onchain developers on Base L2. Built and shipped two <strong>official onchain AI agents for Coinbase</strong> — deployed and used live at <em>Base Camp</em> and <em>DevConnect</em>.
+            </div>
+          </div>
+        </div>
+        <div class="role">
+          <div class="when">2023 – present</div>
+          <div class="what">
+            <div class="title">Interventionist &amp; Sober Companion</div>
+            <div class="org">Self‑employed · Los Angeles, CA</div>
+            <div class="desc">Private 1‑on‑1 recovery support for high‑profile clients. Crisis interventions, treatment placement, post‑discharge continuity of care.</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 id="career">Career <span class="edit">[ edit ]</span></h2>
+      <div class="roles">
+        <div class="role">
+          <div class="when">2021 – 2024</div>
+          <div class="what">
+            <div class="title">Chief Technology Officer — Evergreen Fund</div>
+            <div class="org">Los Angeles, CA · also Director of Operations, Med Room Manager, Technician</div>
+            <div class="desc">
+              Entered the facility as a patient on scholarship; never left. Advanced through every operational role over three years.
+              <strong>As CTO:</strong> owned all technology and led digital transformation, self‑taught.
+              <strong>As Director of Operations:</strong> day‑to‑day operations, staffing, clinical workflow.
+              <strong>As Med Room Manager:</strong> controlled‑substance inventory, DEA compliance, distribution protocols.
+            </div>
+          </div>
+        </div>
+        <div class="role">
+          <div class="when">2019 – 2023</div>
+          <div class="what">
+            <div class="title">Transportation Captain &amp; Driver</div>
+            <div class="org">Teamsters Hollywood Local 399 · Los Angeles, CA</div>
+            <div class="desc">On‑set logistics, scheduling, and multi‑vehicle transportation. Productions include <em>The Matrix Resurrections</em> (Warner Bros.), <em>Grace &amp; Frankie</em> (Netflix), national Walmart commercial campaigns.</div>
+          </div>
+        </div>
+        <div class="role">
+          <div class="when">early career</div>
+          <div class="what">
+            <div class="title">Art Department — HBO's <em>Deadwood</em></div>
+            <div class="org">Hollywood, CA</div>
+            <div class="desc">Left high school at sixteen to join the Art Department on HBO's <em>Deadwood</em>. Attended California Institute of the Arts (CalArts) thereafter.</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 id="community">Community <span class="edit">[ edit ]</span></h2>
+      <div class="roles">
+        <div class="role">
+          <div class="when">ongoing</div>
+          <div class="what">
+            <div class="title">Founder — Overdose LA</div>
+            <div class="org">Street‑level harm reduction · Los Angeles, CA</div>
+            <div class="desc">Founded and operates a street‑level outreach program distributing food, naloxone, and clean equipment to unhoused individuals in Los Angeles.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="refs" id="refs">
+        <div class="ref-head">References &amp; external links</div>
+        <ol>
+          <li><a href="https://beora.care">beora.care</a> — Beora Care, clinical platform.</li>
+          <li><a href="https://basemate.app">basemate.app</a> — Basemate, onchain developer tooling.</li>
+          <li><a href="https://www.base.org/build/base-batches">base.org/build/base-batches</a> — Base Batches accelerator (Coinbase).</li>
+          <li><a href="https://github.com/fweekshow">github.com/fweekshow</a> · <a href="https://linkedin.com/in/matthew-meakin-72592219a">LinkedIn</a></li>
+        </ol>
+      </div>
+
+      <div class="hatfoot">
+        <div>itsmateo.wtf · personal knowledge base</div>
+        <div>v2026.05 · cc by‑sa</div>
+      </div>
+
+    </article>
+
+    <aside>
+      <div class="infobox">
+        <div class="ib-head">
+          Matthew Ross Meakin
+          <span class="sub">Mateo · founder · LA</span>
+        </div>
+        <div class="photo-frame">
+          <div class="photo" role="img" aria-label="Mateo speaking at Base Camp"></div>
+          <div class="caption">Speaking · Base Batches 002</div>
+        </div>
+        <dl>
+          <dt>Based</dt>
+          <dd>Los Angeles, CA</dd>
+          <dt>Occupation</dt>
+          <dd>
+            Founder, CTO
+            <span class="small">behavioral health · web3 · AI</span>
+          </dd>
+          <dt>Known for</dt>
+          <dd>
+            Beora Care<br />
+            Basemate · Overdose LA
+          </dd>
+          <dt>Years sober</dt>
+          <dd>5+ <span class="small">est. 2021</span></dd>
+          <dt>Stack</dt>
+          <dd style="font-family:var(--font-mono);font-size:10.5px;line-height:1.55;">
+            TypeScript · Next.js · Prisma<br />
+            LangChain · Vertex AI<br />
+            XMTP · GCP · Base L2
+          </dd>
+          <dt>Contact</dt>
+          <dd style="font-family:var(--font-mono);font-size:10.5px;line-height:1.6;">
+            mattm@beora.ai<br />
+            meakin.matt@gmail.com
+          </dd>
+          <dt>Links</dt>
+          <dd style="font-family:var(--font-mono);font-size:10.5px;line-height:1.6;">
+            <a href="https://beora.care">beora.care</a><br />
+            <a href="https://basemate.app">basemate.app</a><br />
+            <a href="https://github.com/fweekshow">github · fweekshow</a><br />
+            <a href="https://linkedin.com/in/matthew-meakin-72592219a">linkedin</a>
+          </dd>
+        </dl>
+
+      </div>
+    </aside>
+
   </div>
 
-  <div class="entry">
-    <div class="entry-header">
-      <span class="entry-title">Art Department</span>
-      <span class="entry-date">Early career</span>
-    </div>
-    <div class="entry-org">HBO's <em>Deadwood</em> &nbsp;·&nbsp; Hollywood, CA</div>
-    <ul class="bullets">
-      <li>Left high school to work in the Art Department on HBO's <em>Deadwood</em></li>
-    </ul>
-  </div>
-
-  <div class="entry">
-    <div class="entry-header">
-      <span class="entry-title">Transportation Captain &amp; Driver</span>
-      <span class="entry-date">2019 – 2023</span>
-    </div>
-    <div class="entry-org">Teamsters Hollywood Local 399 &nbsp;·&nbsp; Los Angeles, CA</div>
-    <ul class="bullets">
-      <li>Productions include: <em>The Matrix Resurrections</em> (Warner Bros.), <em>Grace &amp; Frankie</em> (Netflix), Walmart national commercial campaigns</li>
-      <li>Coordinated on-set logistics, scheduling, and multi-vehicle transportation operations</li>
-    </ul>
-  </div>
-
-</section>
-
-<!-- EDUCATION -->
-<section>
-  <h2>Education</h2>
-
-  <div class="entry">
-    <div class="entry-header">
-      <span class="entry-title">California Institute of the Arts (CalArts)</span>
-      <span class="entry-date">Attended</span>
-    </div>
-    <div class="entry-org">Valencia, CA</div>
-  </div>
-
-</section>
-
-<!-- COMMUNITY -->
-<section>
-  <h2>Community Leadership</h2>
-
-  <div class="entry">
-    <div class="entry-header">
-      <span class="entry-title">Founder</span>
-      <span class="entry-date">Ongoing</span>
-    </div>
-    <div class="entry-org">Overdose LA &nbsp;·&nbsp; Los Angeles, CA</div>
-    <ul class="bullets">
-      <li>Founded and operate a street-level homeless outreach program in Los Angeles</li>
-      <li>Distribute food and harm reduction supplies (naloxone, clean equipment) to unhoused individuals</li>
-    </ul>
-  </div>
-
-</section>
-
-<!-- SKILLS -->
-<section>
-  <h2>Skills &amp; Technologies</h2>
-  <div class="skills-grid">
-    <span class="skill-tag">TypeScript</span>
-    <span class="skill-tag">Next.js</span>
-    <span class="skill-tag">Node.js</span>
-    <span class="skill-tag">Prisma / PostgreSQL</span>
-    <span class="skill-tag">LangChain</span>
-    <span class="skill-tag">Vertex AI (Gemini)</span>
-    <span class="skill-tag">GCP</span>
-    <span class="skill-tag">XMTP</span>
-    <span class="skill-tag">Web3 / Base L2</span>
-    <span class="skill-tag">Onchain Agents</span>
-    <span class="skill-tag">Product Strategy</span>
-    <span class="skill-tag">Clinical Operations</span>
-    <span class="skill-tag">HIPAA / 42 CFR Part 2</span>
-    <span class="skill-tag">Team Leadership</span>
-    <span class="skill-tag">Crisis Intervention</span>
-  </div>
-</section>
+</div>
 
 </body>
 </html>
