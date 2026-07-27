@@ -118,100 +118,333 @@ body {
 }
 
 /* ============================================================
-   TOP CHROME — wiki-style header
+   HERO — bordered "console" panel
+   Echoes the .infobox sidebar treatment: paper bg, 1px ink border,
+   dark ink header bar with bone text. Hero state and chat state
+   swap inside the same panel.
    ============================================================ */
-.wiki-top {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: var(--paper);
-  border-bottom: 1px solid var(--ink);
+.hero {
+  background: var(--bone);
+  padding: 56px 24px 40px;
 }
-.wiki-top-inner {
-  max-width: 1240px;
+.hero-wrap {
+  max-width: 920px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 10px 24px;
-  justify-content: flex-end;
 }
-.wiki-search {
-  flex: 1;
-  max-width: 480px;
+
+/* The framed panel — both panes live inside */
+.console {
+  background: var(--paper);
+  border: 1px solid var(--ink);
 }
-.brand {
+
+/* Dark header bar — mirrors .ib-head from sidebar infobox */
+.console-head {
+  background: var(--ink);
+  color: var(--bone);
+  padding: 11px 16px 12px;
   display: flex;
   align-items: center;
   gap: 10px;
-  text-decoration: none;
-  color: var(--ink);
+  flex-wrap: wrap;
 }
-.brand-mark {
+.console-head .dot {
+  margin: 0;
+  vertical-align: 0;
+}
+.ch-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  color: var(--bone);
+}
+.ch-sub {
+  color: var(--ink-4);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+.ch-status {
+  margin-left: auto;
+  color: var(--coral);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+/* Body inside the panel */
+.console-body {
+  padding: 28px 32px 32px;
+}
+
+/* ── HERO — two columns (identity / agent prompt) ───────────── */
+.ch-cols {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 36px;
+  align-items: start;
+}
+.ch-left { min-width: 0; }
+.ch-right {
+  min-width: 0;
+  padding-left: 32px;
+  border-left: 1px solid var(--ink-5);
+}
+
+.ch-bio {
+  font-family: var(--font-wiki);
+  font-size: 19px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin-bottom: 22px;
+}
+.ch-bio a {
+  color: var(--coral-deep);
+  text-decoration: none;
+  border-bottom: 1px solid var(--coral-deep);
+  transition: background var(--t-fast);
+}
+.ch-bio a:hover { background: var(--coral-tint); }
+
+.ch-meta {
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+}
+.ch-meta a {
+  color: var(--ink-3);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ink-4);
+  padding: 1px 0;
+  transition: color var(--t-fast), border-color var(--t-fast);
+}
+.ch-meta a:hover {
+  color: var(--coral-deep);
+  border-bottom-color: var(--coral-deep);
+}
+.ch-meta .sep {
+  margin: 0 8px;
+  color: var(--ink-5);
+}
+
+.ch-prompt-label {
+  margin-bottom: 6px;
+  letter-spacing: 0.06em;
+}
+.ch-prompt {
+  font-family: var(--font-wiki);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin-bottom: 18px;
+}
+.ch-primary {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 28px; height: 28px;
-  border: 1px solid var(--ink);
-  background: var(--bone);
-}
-.brand-word {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 18px;
-  letter-spacing: -0.015em;
-}
-.brand-word em {
-  font-family: var(--font-wiki);
-  font-style: italic;
-  color: var(--coral-deep);
-  font-weight: 500;
-  margin-left: 1px;
-}
-.brand-tag {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--ink-3);
-  padding-left: 10px;
-  border-left: 1px solid var(--ink-5);
-  margin-left: 4px;
-}
-
-.wiki-search {
-  flex: 1;
-  display: flex;
-  align-items: center;
   gap: 10px;
-  border: 1px solid var(--ink);
-  padding: 5px 10px;
-  background: var(--bone);
-  max-width: 480px;
-}
-.wiki-search:focus-within { border-color: var(--coral); box-shadow: 0 0 0 1px var(--coral); }
-.wiki-search input {
-  flex: 1;
-  border: 0;
-  background: transparent;
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--ink);
-  outline: none;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--coral);
+  color: var(--paper);
+  border: 1px solid var(--coral);
+  padding: 11px 18px;
+  cursor: pointer;
+  line-height: 1.2;
+  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
 }
-.wiki-search input::placeholder { color: var(--ink-4); }
-.wiki-search kbd {
+.ch-primary-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
+  animation: chPulse 2s ease-out infinite;
+  flex-shrink: 0;
+}
+@keyframes chPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(255, 255, 255, 0);   }
+  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);     }
+}
+.ch-primary .arrow {
   font-family: var(--font-mono);
-  font-size: 10px;
-  background: var(--bone-3);
+  transition: transform var(--t-fast);
+}
+.ch-primary:hover {
+  background: var(--coral-deep);
+  border-color: var(--coral-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px -8px rgba(220, 88, 63, 0.55);
+}
+.ch-primary:hover .arrow { transform: translateX(3px); }
+.ch-primary:active { transform: translateY(0); }
+.ch-primary:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.ch-secondaries {
+  margin-top: 14px;
   color: var(--ink-3);
-  border: 1px solid var(--ink-5);
-  padding: 1px 4px;
-  letter-spacing: 0.04em;
+}
+.ch-secondaries a {
+  color: var(--ink-3);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ink-4);
+  padding: 1px 0;
+  transition: color var(--t-fast), border-color var(--t-fast);
+}
+.ch-secondaries a:hover {
+  color: var(--coral-deep);
+  border-bottom-color: var(--coral-deep);
+}
+.ch-secondaries .sep {
+  margin: 0 8px;
+  color: var(--ink-5);
 }
 
-.wiki-actions { display: flex; gap: 8px; }
+/* Hero-bottom rule — keep .rule-double 2px ink, just constrain width */
+.hero-rule {
+  max-width: 920px;
+  margin: 0 auto;
+}
 
+/* Responsive — stack columns on narrow viewports */
+@media (max-width: 720px) {
+  .hero { padding: 36px 16px 28px; }
+  .console-body { padding: 22px 20px 24px; }
+  .ch-cols { grid-template-columns: 1fr; gap: 24px; }
+  .ch-right {
+    padding-left: 0;
+    padding-top: 24px;
+    border-left: 0;
+    border-top: 1px solid var(--ink-5);
+  }
+  .ch-title { font-size: 14px; }
+  .ch-bio { font-size: 17px; }
+  .ch-status { display: none; }
+  .console-head { padding: 10px 12px; gap: 8px; }
+  .ch-primary { width: 100%; justify-content: center; }
+}
+
+/* ============================================================
+   CHAT MODAL — floats over the page, does not affect layout.
+   Same console treatment as the hero panel (dark head, paper
+   body, 1px ink border) but sized and scroll-contained so it
+   never grows the document.
+   ============================================================ */
+.chat-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(20, 18, 15, 0.55);
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 180ms ease-out;
+}
+.chat-modal-backdrop[hidden] {
+  display: none;
+}
+.chat-modal-backdrop.is-open {
+  opacity: 1;
+}
+
+.chat-modal {
+  width: min(640px, 100%);
+  height: min(680px, calc(100vh - 48px));
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  box-shadow:
+    0 24px 60px -20px rgba(20, 18, 15, 0.55),
+    0 4px 12px -4px rgba(20, 18, 15, 0.25);
+  transform: scale(0.96) translateY(6px);
+  opacity: 0;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 220ms ease-out;
+  overflow: hidden;
+}
+.chat-modal-backdrop.is-open .chat-modal {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* The modal's header uses the same .console-head styling.
+   Close (×) button lives in the header, right-aligned. */
+.chat-close {
+  margin-left: auto;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 22px;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color var(--t-fast), transform var(--t-fast);
+}
+.chat-close:hover {
+  color: var(--coral);
+  transform: rotate(90deg);
+}
+.chat-close:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+}
+
+/* Scrollable thread region — this is what keeps the page from growing */
+.chat-thread-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 22px 24px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-5) transparent;
+}
+.chat-thread-wrap::-webkit-scrollbar { width: 8px; }
+.chat-thread-wrap::-webkit-scrollbar-track { background: transparent; }
+.chat-thread-wrap::-webkit-scrollbar-thumb {
+  background: var(--ink-5);
+  border-radius: 4px;
+}
+.chat-thread-wrap::-webkit-scrollbar-thumb:hover { background: var(--ink-4); }
+
+/* Pinned footer — chips + free-text form live here */
+.chat-footer {
+  flex-shrink: 0;
+  padding: 4px 24px 20px;
+  border-top: 1px solid var(--ink-6, rgba(20, 18, 15, 0.08));
+  background: var(--paper);
+}
+/* Neutralize the .hc-form top margin since chat-footer handles spacing */
+.chat-footer .hc-form { margin-top: 12px; }
+.chat-footer .hc-chips { padding: 12px 0 0; }
+
+/* Body scroll lock while modal is open */
+body.chat-open {
+  overflow: hidden;
+}
+
+@media (max-width: 720px) {
+  .chat-modal-backdrop { padding: 0; }
+  .chat-modal {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    border-left: 0;
+    border-right: 0;
+  }
+  .chat-thread-wrap { padding: 18px 16px 6px; }
+  .chat-footer { padding: 4px 16px 16px; }
+}
+
+/* btn-mono kept (resume.html may use it, and the form submit needs a button class) */
 .btn-mono {
   display: inline-flex;
   align-items: center;
@@ -230,42 +463,6 @@ body {
 }
 .btn-mono:hover { background: var(--coral); border-color: var(--coral); color: var(--paper); }
 .btn-mono.full { width: 100%; justify-content: center; padding: 9px 12px; }
-
-.wiki-tabs {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  border-top: 1px solid var(--ink-5);
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-.tab {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--ink-3);
-  text-decoration: none;
-  padding: 8px 14px 9px;
-  border-right: 1px solid var(--ink-5);
-  transition: color var(--t-fast), background var(--t-fast);
-}
-.tab:hover { color: var(--ink); background: var(--bone-2); }
-.tab.active {
-  color: var(--ink);
-  background: var(--bone-2);
-  border-bottom: 2px solid var(--coral);
-  margin-bottom: -1px;
-}
-.tab.disabled { color: var(--ink-4); cursor: not-allowed; }
-.tab-spacer { flex: 1; }
-.live {
-  color: var(--coral-deep);
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 0;
-}
 
 /* ============================================================
    PAGE LAYOUT
@@ -745,6 +942,218 @@ sup.fn {
   border: 1px solid var(--ink-5);
   color: var(--ink-2);
   background: var(--bone-2);
+}
+
+/* ============================================================
+   HERO CHAT — thread / chips / form (rendered inside .console)
+   ============================================================ */
+.hc-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 120px;
+  font-family: var(--font-wiki);
+  font-size: 16px;
+  line-height: 1.55;
+}
+.hc-row { display: flex; flex-direction: column; gap: 4px; }
+.hc-row .who {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 10px;
+  font-weight: 600;
+}
+.hc-row-agent .who { color: var(--coral-deep); }
+.hc-row-user .who { color: var(--ink-2); }
+.hc-row-agent p {
+  color: var(--ink);
+  border-left: 2px solid var(--coral);
+  padding: 8px 14px;
+  background: var(--coral-tint);
+}
+.hc-row-agent p a {
+  color: var(--coral-deep);
+  border-bottom: 1px solid var(--coral-deep);
+  text-decoration: none;
+}
+.hc-row-agent p a:hover { background: var(--paper); }
+.hc-row-agent p em { font-style: italic; color: var(--ink); }
+.hc-row-agent p strong { color: var(--ink); font-weight: 600; }
+.hc-row-user p {
+  color: var(--ink);
+  background: var(--bone-2);
+  border-left: 2px solid var(--ink);
+  padding: 8px 14px;
+}
+.hc-row.thinking p::after {
+  content: "▋";
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--coral);
+  animation: blink 0.9s steps(2) infinite;
+}
+
+/* Chips — quick replies */
+.hc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 0 4px;
+}
+.hc-chip {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+  background: var(--bone);
+  border: 1px solid var(--ink);
+  padding: 8px 14px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background var(--t-fast), color var(--t-fast), transform var(--t-fast);
+  line-height: 1.2;
+}
+.hc-chip:hover {
+  background: var(--ink);
+  color: var(--bone);
+  transform: translateY(-1px);
+}
+.hc-chip:active { transform: translateY(0); }
+.hc-chip:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+}
+
+/* Free-text form */
+.hc-form {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  padding: 4px 4px 4px 12px;
+  margin-top: 14px;
+}
+.hc-form:focus-within {
+  box-shadow: 0 0 0 1px var(--coral);
+  border-color: var(--coral);
+}
+.hc-form .prompt {
+  color: var(--coral-deep);
+  font-size: 16px;
+  margin-right: 8px;
+}
+.hc-form input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink);
+  padding: 8px 0;
+  background: transparent;
+}
+.hc-form input::placeholder { color: var(--ink-4); }
+
+/* Consult CTA card */
+.hc-consult-card {
+  margin-top: 18px;
+  padding: 18px 20px 16px;
+  background: var(--paper);
+  border: 1.5px solid var(--coral);
+  position: relative;
+}
+.hc-consult-card::before,
+.hc-consult-card::after {
+  content: "";
+  position: absolute;
+  width: 12px; height: 12px;
+  border: 2px solid var(--coral);
+  pointer-events: none;
+}
+.hc-consult-card::before {
+  top: -2px; left: -2px;
+  border-right: none; border-bottom: none;
+}
+.hc-consult-card::after {
+  bottom: -2px; right: -2px;
+  border-left: none; border-top: none;
+}
+.hcc-label {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--coral-deep);
+  font-size: 10.5px;
+  margin-bottom: 8px;
+}
+.hcc-summary {
+  font-family: var(--font-wiki);
+  font-size: 16px;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.hcc-ask {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 14px;
+}
+.hcc-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.hcc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  text-decoration: none;
+  border: 1px solid var(--ink);
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+}
+.hcc-btn.primary {
+  background: var(--coral);
+  color: var(--paper);
+  border-color: var(--coral);
+}
+.hcc-btn.primary:hover {
+  background: var(--coral-deep);
+  border-color: var(--coral-deep);
+}
+.hcc-btn.ghost {
+  background: var(--bone);
+  color: var(--ink);
+}
+.hcc-btn.ghost:hover {
+  background: var(--ink);
+  color: var(--bone);
+}
+.hcc-foot {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  font-size: 10px;
+  padding-top: 10px;
+  border-top: 1px dotted var(--ink-5);
+}
+
+/* Hero chat — mobile */
+@media (max-width: 700px) {
+  .hc-inner { padding: 20px 14px 24px; }
+  .hc-thread { font-size: 15px; }
+  .hc-chips { gap: 6px; }
+  .hc-chip { width: 100%; text-align: left; font-size: 13px; padding: 10px 12px; }
+  .hcc-actions { flex-direction: column; }
+  .hcc-btn { width: 100%; justify-content: center; }
 }
 
 /* ============================================================
@@ -1382,17 +1791,12 @@ sup.fn {
   .method { border-right: 0 !important; }
   .cc-head { grid-template-columns: 1fr; }
   .cc-meta { border-left: 0; border-top: 1px solid var(--ink); }
-  .wiki-search { display: none; }
   .demo-head { flex-direction: column; }
   .demo-status { padding-top: 0; }
   .demo-title { font-size: 24px; }
-  .brand-tag { display: none; }
 }
 
 @media (max-width: 600px) {
-  .wiki-top-inner { padding: 8px 14px; gap: 8px; }
-  .wiki-tabs { padding: 0 14px; overflow-x: auto; }
-  .tab { padding: 7px 10px; font-size: 10px; }
   .page { padding: 18px 14px 48px; }
   .article-title { font-size: 34px; }
   .article { font-size: 16px; }
@@ -1400,7 +1804,6 @@ sup.fn {
   .article h3 { font-size: 17px; }
   .demo-title { font-size: 20px; }
   .agent-card h3 { font-size: 20px; }
-  .wiki-actions .btn-mono span:not(:first-child) { display: none; }
 }
 
 /* ============================================================

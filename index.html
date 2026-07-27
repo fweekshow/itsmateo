@@ -14,16 +14,54 @@
 
 <a id="top"></a>
 
-<!-- Wiki-style top chrome -->
-<header class="wiki-top">
-  <div class="wiki-top-inner">
-    <div class="wiki-actions">
-      <a href="resume.html" class="btn-mono" target="_blank" rel="noopener" id="downloadPdf">
-        <span>↓</span> Download · PDF
-      </a>
+<!-- Hero — framed "console" identity panel. Chat opens as a modal (see bottom of body). -->
+<section class="hero" aria-label="About Mateo">
+  <div class="hero-wrap">
+    <div class="console" id="heroCard">
+      <div class="console-head">
+        <span class="dot dot-coral" aria-hidden="true"></span>
+        <span class="ch-title">Matthew Ross Meakin</span>
+        <span class="ch-sub mono small">MATEO · FOUNDER · LA</span>
+        <span class="ch-status mono small">agent online</span>
+      </div>
+      <div class="console-body">
+        <div class="ch-cols">
+          <div class="ch-left">
+            <p class="ch-bio">
+              Founder &amp; CTO of <a href="https://beora.care" target="_blank" rel="noopener">Beora Care</a>.
+              Built two onchain AI agents for Coinbase. Sober interventionist, Los Angeles. Self-taught engineer.
+            </p>
+            <div class="ch-meta mono small">
+              <a href="https://github.com/fweekshow" target="_blank" rel="noopener">github</a>
+              <span class="sep">/</span>
+              <a href="https://linkedin.com/in/matthew-meakin-72592219a" target="_blank" rel="noopener">linkedin</a>
+              <span class="sep">/</span>
+              <a href="https://beora.care" target="_blank" rel="noopener">beora.care</a>
+              <span class="sep">/</span>
+              <a href="https://basemate.app" target="_blank" rel="noopener">basemate.app</a>
+            </div>
+          </div>
+          <div class="ch-right">
+            <div class="ch-prompt-label mono small soft">// ask mateo</div>
+            <p class="ch-prompt">A few focused questions to figure out what you need — and whether I'm the right person to talk to.</p>
+            <button class="ch-primary" id="openChatBtn" type="button" aria-haspopup="dialog" aria-controls="chatModal">
+              <span class="ch-primary-dot" aria-hidden="true"></span>
+              <span>Talk to my agent</span>
+              <span class="arrow" aria-hidden="true">→</span>
+            </button>
+            <div class="ch-secondaries mono small">
+              <a href="resume.html" target="_blank" rel="noopener">resume.pdf</a>
+              <span class="sep">·</span>
+              <a href="mailto:mattm@beora.ai">mattm@beora.ai</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</header>
+</section>
+
+<hr class="rule-double hero-rule" />
 
 <div class="page">
 
@@ -253,25 +291,6 @@
 
       </div>
 
-      <!-- The meta: a live agent demo right here -->
-      <aside class="agent-demo" id="askWiki" aria-label="Ask Mateo">
-        <div class="demo-label mono small soft">// ask mateo · this is a real agent. type a question, or tell me what you want to build.</div>
-        <div class="demo-thread" id="demoThread" aria-live="polite">
-          <div class="demo-row demo-row-agent">
-            <span class="who mono small soft">agent</span>
-            <p>Hi — I'm seeded with Mateo's bio. Ask me about Beora, the Coinbase agents, the Evergreen years, anything. If you want to <em>work with him</em>, just say so and I'll walk you through a quick scoping intake.</p>
-          </div>
-        </div>
-        <form class="demo-form" id="demoForm">
-          <span class="mono soft prompt">&gt;</span>
-          <input type="text" id="demoInput" placeholder="e.g. tell me about the Coinbase agents — or, I want to build something with you" autocomplete="off" />
-          <button type="submit" class="btn-coral">
-            <span class="mono small">Ask</span>
-            <span>↵</span>
-          </button>
-        </form>
-      </aside>
-
       <!-- SECTION: Community -->
       <h2 id="community">Community &amp; harm reduction</h2>
 
@@ -392,6 +411,36 @@
     </div>
   </footer>
 
+</div>
+
+<!-- Chat modal — floats over the page, does not affect page layout -->
+<div class="chat-modal-backdrop" id="chatBackdrop" hidden aria-hidden="true">
+  <div class="chat-modal"
+       id="chatModal"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="chatModalTitle">
+    <div class="console-head">
+      <span class="dot dot-coral" aria-hidden="true"></span>
+      <span class="ch-title" id="chatModalTitle">Ask Mateo</span>
+      <span class="ch-sub mono small">AGENT · SESSION OPEN</span>
+      <button class="chat-close" id="closeChatBtn" type="button" aria-label="Close chat">×</button>
+    </div>
+    <div class="chat-thread-wrap">
+      <div class="hc-thread" id="hcThread" aria-live="polite"></div>
+    </div>
+    <div class="chat-footer">
+      <div class="hc-chips" id="hcChips"></div>
+      <form class="hc-form" id="hcForm" style="display:none">
+        <span class="mono soft prompt">&gt;</span>
+        <input id="hcInput" type="text" autocomplete="off" placeholder="type your answer" />
+        <button type="submit" class="btn-coral">
+          <span class="mono small">Send</span>
+          <span>↵</span>
+        </button>
+      </form>
+    </div>
+  </div>
 </div>
 
 <script src="site.js" defer></script>

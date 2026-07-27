@@ -1,0 +1,19 @@
+{
+  "name": "itsmateo",
+  "version": "1.0.0",
+  "description": "itsmateo.wtf — personal wiki + on-demand AI agent (Mateo Meakin)",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --env-file=.env server.js"
+  },
+  "dependencies": {
+    "openai": "^6.39.0",
+    "hono": "^4.12.0",
+    "@hono/node-server": "^2.0.0"
+  }
+}

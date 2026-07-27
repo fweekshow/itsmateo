@@ -1,152 +1,182 @@
 /* ============================================================
    itsmateo.wtf — site script
-   - Live clock + last edited
-   - Article statistics (computed from DOM)
-   - Agent demo with two modes:
-       1. Q&A mode (default)  — answers about Mateo's bio
-       2. Office hours mode   — scopes a project, drives to contact
-   - Triggers for office-hours mode: user-clicked CTA or detected
-     intent words ("build", "hire", "work with", "scope", "project"...)
+   Minimal hero card + on-demand chat. Chip-driven YC-style intake.
+   Branches: BUILD, HIRE, RECOVERY, QA.
+   Zero AI calls on structured paths. QA path hits /api/chat.
    ============================================================ */
 
-// ── Bio context for the agent. Tight. Will inject into prompts. ──
-const MATEO_BIO = `
-You are an agent embedded in Matthew "Mateo" Meakin's personal wiki (itsmateo.wtf).
-You answer questions about Mateo in his own calm, direct voice — concise (1-3 short paragraphs max), specific, never marketing-y, never hyped. Use plain language. Don't make up facts; if you don't know, say so and point to mattm@beora.ai.
-
-# Mateo facts
-
-- Full name: Matthew Ross Meakin. Goes by "Mateo".
-- Based in Los Angeles, CA. Born in Los Angeles.
-- Sober since 2021 (5+ years).
-- No CS degree. Self-taught engineer.
-- Attended California Institute of the Arts (CalArts) — did not graduate.
-
-# Current companies & roles
-
-- **Founder & CTO of Beora Care** (founded 2024). HIPAA-compliant AI platform for behavioral health / addiction recovery programs. Two surfaces: CareWiki (Wikipedia-styled staff dashboard for compiling, reviewing, auditing patient records) and Beora (iOS care concierge for clients and clinical assistants). Designed three-tier PHI architecture enforcing 42 CFR Part 2; built human-in-the-loop review pipeline with clinician trust graduation. Built from lived experience, not a case study. Site: beora.care.
-- **Founder of Basemate** (founded 2023). Tooling for onchain developers on Coinbase's Base L2 network. Accepted into Base Batches 002, Coinbase's onchain startup accelerator. Site: basemate.app.
-  - Shane Mac (Founder & CEO of XMTP) is an Advisor on Basemate.
-- **Interventionist & sober companion** (private practice, 2023–present). Private 1-on-1 recovery support for high-profile clients. Crisis intervention, treatment-facility placement, post-discharge continuity of care.
-
-# Coinbase agents (the marquee work)
-
-Mateo has built and deployed two official onchain AI agents for Coinbase:
-1. **Base Camp agent** — Built for and deployed live at Base Camp, Coinbase's developer event for the Base ecosystem.
-2. **DevConnect agent** — Follow-up agent deployed at DevConnect, the Ethereum developer convening.
-
-Both went live on stage at flagship Coinbase developer events. Stack: TypeScript, LangChain, XMTP, onchain execution on Base L2.
-
-# Evergreen Fund (2021–2024)
-
-Mateo entered Evergreen Fund as a patient on scholarship after a period of homelessness on Skid Row. He was hired onto staff and over three years advanced through every operational role:
-- 2021: Technician (floor support, shift work, charting)
-- 2022: Med Room Manager (controlled-substance inventory, DEA compliance)
-- 2023: Director of Operations (day-to-day ops, staffing, clinical workflow design)
-- 2024: Chief Technology Officer (built internal systems from scratch, self-taught)
-
-# Earlier (film & television)
-
-- Left high school at sixteen for the Art Department on HBO's *Deadwood*.
-- Teamsters Hollywood Local 399 transportation captain & driver (2019–2023). Productions include The Matrix Resurrections (Warner Bros.), Grace & Frankie (Netflix), national Walmart commercial campaigns.
-
-# Community
-
-- **Founder of Overdose LA** — street-level harm-reduction outreach in Los Angeles. Distributes food, naloxone, and harm-reduction supplies to unhoused individuals on Skid Row and surrounding encampments.
-
-# Stack
-
-TypeScript, Next.js, Node.js, Prisma + Postgres, LangChain, Vertex AI (Gemini), GCP, XMTP, Base L2, SwiftUI for iOS. HIPAA / 42 CFR Part 2. Crisis intervention, clinical ops, DEA compliance, team leadership.
-
-# Contact
-
-Work: mattm@beora.ai
-Personal: meakin.matt@gmail.com
-GitHub: github.com/fweekshow
-LinkedIn: linkedin.com/in/matthew-meakin-72592219a
-`.trim();
-
-// ── Office hours flow steps ──
-// Each step: a question Mateo's agent asks, plus a key under which to store the answer.
-const OFFICE_HOURS_STEPS = [
-  {
-    key: 'project',
-    prompt: "Tell me what you're building or what you're trying to figure out. A sentence or two is plenty.",
-    placeholder: "e.g. an AI agent for our clinic's intake process",
+// ── FLOW tree — every step keyed by id ─────────────────────────
+// step: { message, chips?: [{label, value, next}], freeText?: {key, placeholder, next}, terminal? }
+const FLOW = {
+  root: {
+    message: "Hey. I'm Mateo. I built clinical AI for addiction recovery, shipped onchain agents for Coinbase, and run a private intervention practice. What's going on for you?",
+    chips: [
+      { label: "I'm building something", value: "building", next: "build_q1" },
+      { label: "I want to hire or work with you", value: "hire", next: "hire_q1" },
+      { label: "I need recovery or intervention help", value: "recovery", next: "recovery_msg" },
+      { label: "Just curious about your work", value: "curious", next: "qa_open" },
+    ],
   },
-  {
-    key: 'stage',
-    prompt: "Where are you in it? Idea, prototype, shipping, or scaling?",
-    placeholder: "e.g. we have a v1 in production, ~50 active users",
-  },
-  {
-    key: 'help',
-    prompt: "Where do you most want Mateo's input? Engineering, agent design, clinical / recovery domain, strategy, fundraising, something else?",
-    placeholder: "e.g. agent design + clinical compliance",
-  },
-  {
-    key: 'timeline',
-    prompt: "What's your timeline? This week, this month, this quarter, or just exploring?",
-    placeholder: "e.g. need to ship before EOQ",
-  },
-  {
-    key: 'contact',
-    prompt: "Best way to reach you — email is best. Optionally drop your name and what company.",
-    placeholder: "you@company.com · Jane Doe · Acme Recovery",
-  },
-];
 
-// Trigger words that move Q&A → office hours automatically
-const TRIGGERS = [
-  /\bhire\b/i, /\bwork (with|together)\b/i, /\bbuild .* with\b/i,
-  /\bscope\b/i, /\boffice hours\b/i, /\bcollaborate\b/i, /\bconsult\b/i,
-  /\bproject\b/i, /\badvise\b/i, /\bhelp me\b/i, /\bbring .* on\b/i,
-  /\blooking for\b/i, /\bcan you build\b/i, /\bwould you\b/i,
-];
+  // ── BUILD path ──────────────────────────────────────────────
+  build_q1: {
+    message: "Tell me what you're building. One line is plenty.",
+    freeText: { key: "project", placeholder: "e.g. an AI intake tool for our clinic", next: "build_q2" },
+  },
+  build_q2: {
+    message: "What's the goal? No wrong answer — money and mission are both real.",
+    chips: [
+      { label: "Make money", value: "make money", next: "build_q3" },
+      { label: "Help people", value: "help people", next: "build_q3" },
+      { label: "Both", value: "both", next: "build_q3" },
+      { label: "Still figuring it out", value: "still figuring it out", next: "build_q3" },
+    ],
+    answerKey: "goal",
+  },
+  build_q3: {
+    message: "Where are you actually stuck right now?",
+    chips: [
+      { label: "Don't know what to build yet", value: "don't know what to build yet", next: "build_q4" },
+      { label: "Know what to build, can't execute", value: "know what to build, can't execute", next: "build_q4" },
+      { label: "Built it, not getting traction", value: "built it, not getting traction", next: "build_q4" },
+      { label: "Scaling something that already works", value: "scaling something that already works", next: "build_q4" },
+      { label: "Something else", value: "__other", next: "build_q3_other" },
+    ],
+    answerKey: "stuck",
+  },
+  build_q3_other: {
+    message: "Got it — describe it in a line.",
+    freeText: { key: "stuck", placeholder: "where you're actually stuck", next: "build_q4" },
+  },
+  build_q4: {
+    message: "What's the smallest win that would feel real?",
+    chips: [
+      { label: "Ship a working prototype", value: "ship a working prototype", next: "build_q5" },
+      { label: "Get first paying customer", value: "get first paying customer", next: "build_q5" },
+      { label: "Get first person helped", value: "get first person helped", next: "build_q5" },
+      { label: "Get funding or a yes from someone important", value: "funding or a yes from someone important", next: "build_q5" },
+      { label: "Clarity on what to do next", value: "clarity on what to do next", next: "build_q5" },
+    ],
+    answerKey: "win",
+  },
+  build_q5: {
+    message: "What kind of help do you actually need?",
+    chips: [
+      { label: "Engineering", value: "engineering", next: "consult" },
+      { label: "AI / agent design", value: "ai / agent design", next: "consult" },
+      { label: "Clinical / recovery domain", value: "clinical / recovery domain", next: "consult" },
+      { label: "Product strategy", value: "product strategy", next: "consult" },
+      { label: "Fundraising / pitching", value: "fundraising / pitching", next: "consult" },
+      { label: "Just a sounding board", value: "just a sounding board", next: "consult" },
+    ],
+    answerKey: "help",
+  },
 
-// ── Mode state ──
-const MODE_QA = 'qa';
-const MODE_OFFICE = 'office';
-const MODE_DONE = 'done';
+  // ── HIRE path ───────────────────────────────────────────────
+  hire_q1: {
+    message: "What kind of engagement are you thinking?",
+    chips: [
+      { label: "Full-time / in-house", value: "full-time / in-house", next: "hire_q2" },
+      { label: "Contract or project", value: "contract or project", next: "hire_q2" },
+      { label: "Advisory", value: "advisory", next: "hire_q2" },
+      { label: "Co-founder", value: "co-founder", next: "hire_q2" },
+    ],
+    answerKey: "engagement",
+  },
+  hire_q2: {
+    message: "What's the domain?",
+    chips: [
+      { label: "AI / agents", value: "ai / agents", next: "hire_q3" },
+      { label: "Clinical / behavioral health", value: "clinical / behavioral health", next: "hire_q3" },
+      { label: "Onchain / web3", value: "onchain / web3", next: "hire_q3" },
+      { label: "General engineering", value: "general engineering", next: "hire_q3" },
+      { label: "Recovery / intervention", value: "recovery / intervention", next: "hire_q3" },
+      { label: "Not sure yet", value: "not sure yet", next: "hire_q3" },
+    ],
+    answerKey: "domain",
+  },
+  hire_q3: {
+    message: "Timeline?",
+    chips: [
+      { label: "ASAP", value: "ASAP", next: "hire_q4" },
+      { label: "This month", value: "this month", next: "hire_q4" },
+      { label: "This quarter", value: "this quarter", next: "hire_q4" },
+      { label: "Just exploring", value: "just exploring", next: "hire_q4" },
+    ],
+    answerKey: "timeline",
+  },
+  hire_q4: {
+    message: "Last one — one line, what's it for?",
+    freeText: { key: "project", placeholder: "e.g. lead engineer for our YC-backed recovery startup", next: "consult" },
+  },
 
+  // ── RECOVERY path ────────────────────────────────────────────
+  recovery_msg: {
+    message: "Mateo runs a private intervention and sober companion practice. This is real and personal — not a bot intake. Reach him directly: <a href=\"mailto:mattm@beora.ai\">mattm@beora.ai</a> or <a href=\"mailto:meakin.matt@gmail.com\">meakin.matt@gmail.com</a>. He responds to recovery messages first.",
+    terminal: true,
+  },
+
+  // ── QA path ──────────────────────────────────────────────────
+  qa_open: {
+    message: "Ask me anything — Beora, the Coinbase agents, the Evergreen years, the recovery work. I'll answer in Mateo's voice.",
+    qaMode: true,
+  },
+};
+
+// ── State ──────────────────────────────────────────────────────
 const state = {
-  mode: MODE_QA,
-  stepIndex: 0,
+  step: 'root',
+  path: 'root',        // 'build' | 'hire' | 'recovery' | 'qa'
   answers: {},
+  qaTurns: 0,
   busy: false,
 };
 
-// ── DOM helpers ──
+// ── DOM helpers ────────────────────────────────────────────────
 const $ = (id) => document.getElementById(id);
-const thread = () => $('demoThread');
-const input = () => $('demoInput');
-const form = () => $('demoForm');
+const thread = () => $('hcThread');
+const threadWrap = () => document.querySelector('.chat-thread-wrap');
+const chipBox = () => $('hcChips');
+const form = () => $('hcForm');
+const input = () => $('hcInput');
+
+function scrollThread() {
+  const wrap = threadWrap();
+  if (wrap) wrap.scrollTop = wrap.scrollHeight;
+}
 
 function escape(s) {
   const div = document.createElement('div');
-  div.textContent = s;
+  div.textContent = s == null ? '' : String(s);
   return div.innerHTML;
 }
 
-function addRow({ who, html, klass }) {
+function addRow({ who, html, allowLinks }) {
   const row = document.createElement('div');
-  row.className = `demo-row demo-row-${who}${klass ? ' ' + klass : ''}`;
+  row.className = `hc-row hc-row-${who}`;
+  const safe = allowLinks ? html : escape(html);
   row.innerHTML = `
-    <span class="who mono small soft">${who === 'agent' ? 'agent' : 'you'}</span>
-    <p>${html}</p>
+    <span class="who mono small">${who === 'agent' ? 'mateo' : 'you'}</span>
+    <p>${safe}</p>
   `;
   thread().appendChild(row);
-  thread().scrollTop = thread().scrollHeight;
+  scrollThread();
   return row;
 }
 
-function addAgentTyping() {
+function addTyping() {
   const row = document.createElement('div');
-  row.className = 'demo-row demo-row-agent thinking';
-  row.innerHTML = `<span class="who mono small soft">agent</span><p>thinking</p>`;
+  row.className = 'hc-row hc-row-agent thinking';
+  row.innerHTML = `<span class="who mono small">mateo</span><p>thinking</p>`;
   thread().appendChild(row);
-  thread().scrollTop = thread().scrollHeight;
+  scrollThread();
   return row;
+}
+
+function clearChips() { chipBox().innerHTML = ''; }
+function showForm(show) {
+  form().style.display = show ? '' : 'none';
+  if (show) setTimeout(() => input().focus(), 60);
 }
 
 function setBusy(b) {
@@ -154,194 +184,102 @@ function setBusy(b) {
   const btn = form().querySelector('button');
   if (btn) btn.disabled = b;
   input().disabled = b;
-  if (!b) setTimeout(() => input().focus(), 80);
 }
 
-// ── Mode banner / progress strip ──
-function showOfficeBanner() {
-  let banner = $('demoModeBanner');
-  if (!banner) {
-    banner = document.createElement('div');
-    banner.id = 'demoModeBanner';
-    banner.className = 'demo-mode-banner';
-    banner.innerHTML = `
-      <span class="left">// office hours · scoping a project</span>
-      <button type="button" id="cancelOffice">cancel · back to Q&A</button>
-    `;
-    thread().parentNode.insertBefore(banner, thread());
-    $('cancelOffice').addEventListener('click', cancelOfficeHours);
-  }
-  // progress
-  let prog = $('demoProgress');
-  if (!prog) {
-    prog = document.createElement('div');
-    prog.id = 'demoProgress';
-    prog.className = 'demo-progress';
-    thread().parentNode.appendChild(prog);
-  }
-  renderProgress();
-}
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-function renderProgress() {
-  const prog = $('demoProgress');
-  if (!prog) return;
-  const total = OFFICE_HOURS_STEPS.length;
-  let html = `<span>scoping · step ${Math.min(state.stepIndex + 1, total)} of ${total}</span>`;
-  for (let i = 0; i < total; i++) {
-    const cls = i < state.stepIndex ? 'pip done' :
-                i === state.stepIndex ? 'pip active' : 'pip';
-    html += `<span class="${cls}"></span>`;
-  }
-  prog.innerHTML = html;
-}
-
-function hideOfficeChrome() {
-  $('demoModeBanner')?.remove();
-  $('demoProgress')?.remove();
-}
-
-// ── Office hours: enter / next / cancel ──
-function enterOfficeHours() {
-  state.mode = MODE_OFFICE;
-  state.stepIndex = 0;
-  state.answers = {};
-  showOfficeBanner();
-  addRow({
-    who: 'agent',
-    html: `Switching into <em>office hours</em> mode. I'll ask 5 short questions, then I'll write a tight brief and send it straight to Mateo. Takes about 90 seconds.<br><br><strong>${escape(OFFICE_HOURS_STEPS[0].prompt)}</strong>`,
+// ── Chip rendering ─────────────────────────────────────────────
+function renderChips(chips) {
+  clearChips();
+  chips.forEach(({ label, value, next }) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'hc-chip';
+    btn.textContent = label;
+    btn.addEventListener('click', () => onChipClick({ label, value, next }));
+    chipBox().appendChild(btn);
   });
-  input().placeholder = OFFICE_HOURS_STEPS[0].placeholder;
 }
 
-function cancelOfficeHours() {
-  state.mode = MODE_QA;
-  state.stepIndex = 0;
-  state.answers = {};
-  hideOfficeChrome();
-  addRow({
-    who: 'agent',
-    html: 'Switched back to Q&A. Ask me anything about Mateo.',
-  });
-  input().placeholder = "What did he build at Evergreen Fund?";
+function onChipClick({ label, value, next }) {
+  if (state.busy) return;
+  const current = FLOW[state.step];
+  if (current && current.answerKey) {
+    state.answers[current.answerKey] = value === '__other' ? '' : value;
+  }
+  addRow({ who: 'user', html: label });
+  clearChips();
+  trackPath(state.step, next);
+  advance(next);
 }
 
-function nextOfficeStep(userText) {
-  // Save the previous answer
-  const prev = OFFICE_HOURS_STEPS[state.stepIndex];
-  state.answers[prev.key] = userText;
-  state.stepIndex += 1;
-  renderProgress();
+// Tag which top-level path we're in based on the destination
+function trackPath(_fromStep, toStep) {
+  if (toStep.startsWith('build')) state.path = 'build';
+  else if (toStep.startsWith('hire')) state.path = 'hire';
+  else if (toStep === 'recovery_msg') state.path = 'recovery';
+  else if (toStep === 'qa_open') state.path = 'qa';
+  else if (toStep === 'root') state.path = 'root';
+}
 
-  if (state.stepIndex >= OFFICE_HOURS_STEPS.length) {
-    completeOfficeHours();
+// ── Step driver ────────────────────────────────────────────────
+async function advance(nextStep) {
+  state.step = nextStep;
+
+  // Synthetic "consult" step — render the CTA card and stop
+  if (nextStep === 'consult') {
+    setBusy(true);
+    const typing = addTyping();
+    await sleep(550);
+    typing.remove();
+    renderConsultCTA();
+    setBusy(false);
     return;
   }
-  const step = OFFICE_HOURS_STEPS[state.stepIndex];
-  addRow({
-    who: 'agent',
-    html: `Got it. <strong>${escape(step.prompt)}</strong>`,
-  });
-  input().placeholder = step.placeholder;
-}
 
-async function completeOfficeHours() {
-  state.mode = MODE_DONE;
-  hideOfficeChrome();
+  const step = FLOW[nextStep];
+  if (!step) return;
 
-  const a = state.answers;
-  const typing = addAgentTyping();
-
-  // Have the agent synthesize a short summary in Mateo's voice
-  const summaryPrompt = `${MATEO_BIO}
-
-A potential collaborator just walked through Mateo's office-hours intake. Here is what they said:
-- What they're building: ${a.project}
-- Stage: ${a.stage}
-- Where they want input: ${a.help}
-- Timeline: ${a.timeline}
-- Contact: ${a.contact}
-
-Write a SHORT 2-sentence reply in Mateo's voice. First sentence: a calm, specific reflection of what they need — concrete, not flattering. Second sentence: confirm Mateo will reach out at the contact above within 24 hours. No greetings, no sign-off, no marketing language. Plain. End there.`;
-
-  let synthesized = '';
-  try {
-    synthesized = await window.claude.complete(summaryPrompt);
-  } catch (e) {
-    synthesized = "Got the picture. Mateo will reach out at the email you gave us within 24 hours.";
-  }
+  setBusy(true);
+  const typing = addTyping();
+  await sleep(420);
   typing.remove();
 
-  // Render the confirmation card
-  const card = document.createElement('div');
-  card.className = 'demo-confirm';
-  const body = encodeURIComponent(
-    `OFFICE HOURS BRIEF — via itsmateo.wtf\n\n` +
-    `Project: ${a.project}\n` +
-    `Stage: ${a.stage}\n` +
-    `Where I want your input: ${a.help}\n` +
-    `Timeline: ${a.timeline}\n` +
-    `Contact: ${a.contact}\n`
-  );
-  const subject = encodeURIComponent(`Office hours · ${(a.project || '').slice(0, 60)}`);
+  addRow({ who: 'agent', html: step.message, allowLinks: true });
 
-  card.innerHTML = `
-    <h4>// brief · sent</h4>
-    <p>${escape(synthesized)}</p>
-    <dl>
-      <dt>Project</dt><dd>${escape(a.project)}</dd>
-      <dt>Stage</dt><dd>${escape(a.stage)}</dd>
-      <dt>Where</dt><dd>${escape(a.help)}</dd>
-      <dt>Timeline</dt><dd>${escape(a.timeline)}</dd>
-      <dt>Contact</dt><dd>${escape(a.contact)}</dd>
-    </dl>
-    <div class="actions">
-      <a href="mailto:mattm@beora.ai?subject=${subject}&body=${body}">→ Open in email</a>
-      <a href="#" class="ghost" id="copyBrief">Copy brief</a>
-      <a href="#" class="ghost" id="restartHours">Start over</a>
-    </div>
-  `;
-  thread().appendChild(card);
-  thread().scrollTop = thread().scrollHeight;
-
-  $('copyBrief').addEventListener('click', (e) => {
-    e.preventDefault();
-    const text = `OFFICE HOURS BRIEF — via itsmateo.wtf\n\nProject: ${a.project}\nStage: ${a.stage}\nWhere I want your input: ${a.help}\nTimeline: ${a.timeline}\nContact: ${a.contact}`;
-    navigator.clipboard.writeText(text).then(() => {
-      e.target.textContent = 'Copied ✓';
-      setTimeout(() => { if (e.target) e.target.textContent = 'Copy brief'; }, 1800);
-    });
-  });
-  $('restartHours').addEventListener('click', (e) => {
-    e.preventDefault();
-    state.mode = MODE_QA;
-    enterOfficeHours();
-  });
-
-  input().placeholder = "Anything else? Ask away.";
-  state.mode = MODE_QA; // allow more Q&A after the brief
-}
-
-// ── Q&A mode: send to Claude ──
-async function answerQuestion(question) {
-  const prompt = `${MATEO_BIO}
-
-A reader of the wiki just asked: "${question}"
-
-Reply in Mateo's voice — calm, specific, plain language. 1-3 short paragraphs at most. If the question signals interest in working with him or building something together, end with a single sentence offering to walk them through a quick office-hours intake. Never use marketing language. Don't use emoji. Don't say "Great question". Just answer.`;
-
-  try {
-    return await window.claude.complete(prompt);
-  } catch (e) {
-    return "Sorry — agent's offline right now. For real questions, email mattm@beora.ai.";
+  if (step.terminal) {
+    showForm(false);
+    setBusy(false);
+    return;
   }
+
+  if (step.qaMode) {
+    clearChips();
+    showForm(true);
+    input().placeholder = "ask anything about Mateo";
+    setBusy(false);
+    return;
+  }
+
+  if (step.chips) {
+    showForm(false);
+    renderChips(step.chips);
+    setBusy(false);
+    return;
+  }
+
+  if (step.freeText) {
+    clearChips();
+    showForm(true);
+    input().placeholder = step.freeText.placeholder || 'type your answer';
+    setBusy(false);
+    return;
+  }
+
+  setBusy(false);
 }
 
-// Heuristic — does the user's message want to start scoping a project?
-function isOfficeIntent(text) {
-  return TRIGGERS.some((re) => re.test(text));
-}
-
-// ── Form submit ──
+// ── Form submit (QA + free-text steps) ─────────────────────────
 async function onSubmit(e) {
   e.preventDefault();
   if (state.busy) return;
@@ -349,45 +287,166 @@ async function onSubmit(e) {
   if (!text) return;
   input().value = '';
 
-  addRow({ who: 'user', html: escape(text) });
+  addRow({ who: 'user', html: text });
   setBusy(true);
 
-  try {
-    if (state.mode === MODE_OFFICE) {
-      nextOfficeStep(text);
-      setBusy(false);
-      return;
-    }
+  const step = FLOW[state.step];
 
-    // QA mode — but check intent first
-    if (state.mode === MODE_QA && isOfficeIntent(text)) {
-      // briefly acknowledge then switch
-      const typing = addAgentTyping();
-      await sleep(450);
-      typing.remove();
-      enterOfficeHours();
-      setBusy(false);
-      return;
-    }
-
-    const typing = addAgentTyping();
-    const reply = await answerQuestion(text);
-    typing.remove();
-    // Light formatting — paragraph breaks
-    const html = escape(reply)
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br>');
-    addRow({ who: 'agent', html });
-  } catch (err) {
-    addRow({ who: 'agent', html: 'Hit an error — try again, or email mattm@beora.ai.' });
-  } finally {
+  // Free-text step in a structured flow
+  if (step && step.freeText) {
+    state.answers[step.freeText.key] = text;
     setBusy(false);
+    advance(step.freeText.next);
+    return;
+  }
+
+  // QA mode — call Claude
+  if (step && step.qaMode) {
+    const typing = addTyping();
+    try {
+      const reply = await answerQuestion(text);
+      typing.remove();
+      const html = escape(reply).replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+      addRow({ who: 'agent', html, allowLinks: true });
+      state.qaTurns += 1;
+      // After 2 turns, offer the structured paths
+      if (state.qaTurns >= 2) {
+        await sleep(400);
+        addRow({
+          who: 'agent',
+          html: 'If any of this is hitting close to something you\'re working on or want to bring Mateo in on — pick one:',
+          allowLinks: true,
+        });
+        renderChips([
+          { label: "I'm building something", value: "building", next: "build_q1" },
+          { label: "I want to hire or work with you", value: "hire", next: "hire_q1" },
+          { label: "Keep asking questions", value: "more qa", next: "qa_open" },
+        ]);
+        showForm(false);
+        state.qaTurns = 0;
+      }
+    } catch (err) {
+      typing.remove();
+      addRow({ who: 'agent', html: "Agent's offline. Email mattm@beora.ai." });
+    }
+    setBusy(false);
+    return;
+  }
+
+  setBusy(false);
+}
+
+// ── QA: backend call ───────────────────────────────────────────
+async function answerQuestion(question) {
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ question }),
+    });
+    if (res.status === 429) {
+      return "Whoa — too many questions in a short window. Try again in a bit, or just email mattm@beora.ai.";
+    }
+    if (!res.ok) {
+      return "Agent's offline right now. Email mattm@beora.ai and Mateo will reply personally.";
+    }
+    const data = await res.json();
+    return data.reply || "No reply from the agent — try again, or email mattm@beora.ai.";
+  } catch (err) {
+    return "Couldn't reach the agent. Email mattm@beora.ai instead.";
   }
 }
 
-const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+// ── Brief building + consult CTA ───────────────────────────────
+function buildSummary() {
+  const a = state.answers;
+  if (state.path === 'build') {
+    const parts = [];
+    if (a.project) parts.push(`You're building ${a.project}`);
+    if (a.goal) parts.push(`the goal is to ${a.goal}`);
+    if (a.stuck) parts.push(`you're stuck on ${a.stuck}`);
+    if (a.win) parts.push(`a real win looks like ${a.win}`);
+    if (a.help) parts.push(`and you'd want Mateo's help on ${a.help}`);
+    return parts.join(', ') + '.';
+  }
+  if (state.path === 'hire') {
+    const parts = [];
+    if (a.engagement) parts.push(`Looking for a ${a.engagement} engagement`);
+    if (a.domain) parts.push(`in ${a.domain}`);
+    if (a.timeline) parts.push(`on a ${a.timeline} timeline`);
+    if (a.project) parts.push(`for ${a.project}`);
+    return parts.join(', ') + '.';
+  }
+  return 'Reached out via the chat on itsmateo.wtf.';
+}
 
-// ── TOC toggle ──
+function buildEmailBody() {
+  const a = state.answers;
+  const lines = ['Sent from the chat on itsmateo.wtf', ''];
+  if (state.path === 'build') {
+    lines.push('// build path');
+    if (a.project) lines.push(`Project: ${a.project}`);
+    if (a.goal) lines.push(`Goal: ${a.goal}`);
+    if (a.stuck) lines.push(`Stuck on: ${a.stuck}`);
+    if (a.win) lines.push(`Win that would feel real: ${a.win}`);
+    if (a.help) lines.push(`Help needed: ${a.help}`);
+  } else if (state.path === 'hire') {
+    lines.push('// hire path');
+    if (a.engagement) lines.push(`Engagement: ${a.engagement}`);
+    if (a.domain) lines.push(`Domain: ${a.domain}`);
+    if (a.timeline) lines.push(`Timeline: ${a.timeline}`);
+    if (a.project) lines.push(`For: ${a.project}`);
+  }
+  lines.push('', '— who I am:', '', '');
+  return lines.join('\n');
+}
+
+function buildSubject(prefix) {
+  const a = state.answers;
+  const topic = (a.project || a.domain || 'the work').slice(0, 60);
+  return `${prefix} · ${topic}`;
+}
+
+function renderConsultCTA() {
+  const summary = buildSummary();
+  const body = encodeURIComponent(buildEmailBody());
+  const subjConsult = encodeURIComponent(buildSubject('Consult'));
+  const subjEmail = encodeURIComponent(buildSubject('Hi Mateo'));
+
+  const card = document.createElement('div');
+  card.className = 'hc-consult-card';
+  card.innerHTML = `
+    <div class="hcc-label mono small">// here's what I heard</div>
+    <p class="hcc-summary">${escape(summary)}</p>
+    <p class="hcc-ask">Would you like to set up a consult with Matthew?</p>
+    <div class="hcc-actions">
+      <a class="hcc-btn primary" href="mailto:mattm@beora.ai?subject=${subjConsult}&body=${body}">
+        → Yes, let's talk
+      </a>
+      <a class="hcc-btn ghost" href="mailto:mattm@beora.ai?subject=${subjEmail}&body=${body}">
+        Send an email instead
+      </a>
+    </div>
+    <div class="hcc-foot mono small">
+      lands directly in mattm@beora.ai · expect a reply within 24h
+    </div>
+  `;
+  thread().appendChild(card);
+  thread().scrollTop = thread().scrollHeight;
+
+  // Offer restart
+  renderChips([
+    { label: "Start over", value: "restart", next: "root" },
+  ]);
+  // restart resets state
+  chipBox().querySelector('.hc-chip')?.addEventListener('click', () => {
+    state.answers = {};
+    state.path = 'root';
+    state.qaTurns = 0;
+  });
+}
+
+// ── TOC toggle (unchanged) ─────────────────────────────────────
 function wireTOC() {
   document.querySelector('[data-toggle="toc"]')?.addEventListener('click', (e) => {
     const list = document.getElementById('tocList');
@@ -398,8 +457,66 @@ function wireTOC() {
   });
 }
 
-// ── Init ──
+// ── Init ───────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   form()?.addEventListener('submit', onSubmit);
   wireTOC();
+
+  const backdrop = document.getElementById('chatBackdrop');
+  const modal = document.getElementById('chatModal');
+  const openBtn = document.getElementById('openChatBtn');
+  const closeBtn = document.getElementById('closeChatBtn');
+  let chatStarted = false;
+  let lastFocused = null;
+
+  function openChat() {
+    if (!backdrop) return;
+    lastFocused = document.activeElement;
+    backdrop.hidden = false;
+    backdrop.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('chat-open');
+    // Force a reflow so the transition plays from the initial state
+    void backdrop.offsetHeight;
+    backdrop.classList.add('is-open');
+
+    if (!chatStarted) {
+      advance('root');
+      chatStarted = true;
+    }
+
+    // Focus the input if it's visible, otherwise the close button
+    setTimeout(() => {
+      const inp = input();
+      if (inp && form()?.style.display !== 'none') {
+        inp.focus();
+      } else {
+        closeBtn?.focus();
+      }
+      scrollThread();
+    }, 240);
+  }
+
+  function closeChat() {
+    if (!backdrop) return;
+    backdrop.classList.remove('is-open');
+    backdrop.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('chat-open');
+    setTimeout(() => {
+      backdrop.hidden = true;
+      lastFocused?.focus?.();
+    }, 200);
+  }
+
+  openBtn?.addEventListener('click', openChat);
+  closeBtn?.addEventListener('click', closeChat);
+
+  // Click backdrop (but not the modal itself) to close
+  backdrop?.addEventListener('click', (e) => {
+    if (e.target === backdrop) closeChat();
+  });
+
+  // Esc to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && backdrop && !backdrop.hidden) closeChat();
+  });
 });
