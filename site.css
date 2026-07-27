@@ -132,10 +132,11 @@ body {
   margin: 0 auto;
 }
 
-/* The framed panel — both panes live inside */
+/* The framed panel */
 .console {
   background: var(--paper);
   border: 1px solid var(--ink);
+  box-shadow: 0 10px 28px -18px rgba(11, 11, 15, 0.35);
 }
 
 /* Dark header bar — mirrors .ib-head from sidebar infobox */
@@ -236,7 +237,9 @@ body {
   color: var(--ink-2);
   margin-bottom: 18px;
 }
-.ch-primary {
+button.ch-primary {
+  -webkit-appearance: none;
+  appearance: none;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -277,9 +280,13 @@ body {
   transform: translateY(-1px);
   box-shadow: 0 6px 16px -8px rgba(220, 88, 63, 0.55);
 }
+button.ch-primary:hover {
+  background: var(--coral-deep);
+  border-color: var(--coral-deep);
+}
 .ch-primary:hover .arrow { transform: translateX(3px); }
-.ch-primary:active { transform: translateY(0); }
-.ch-primary:focus-visible {
+button.ch-primary:active { transform: translateY(0); }
+button.ch-primary:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
@@ -324,59 +331,63 @@ body {
   .ch-bio { font-size: 17px; }
   .ch-status { display: none; }
   .console-head { padding: 10px 12px; gap: 8px; }
-  .ch-primary { width: 100%; justify-content: center; }
+  button.ch-primary { width: 100%; justify-content: center; }
 }
 
 /* ============================================================
-   CHAT MODAL — floats over the page, does not affect layout.
-   Same console treatment as the hero panel (dark head, paper
-   body, 1px ink border) but sized and scroll-contained so it
-   never grows the document.
+   CHAT MODAL — fixed-size terminal window over the page.
+   Grid layout: header | scrollable thread | pinned footer.
+   The page never grows — only the thread scrolls.
    ============================================================ */
 .chat-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(20, 18, 15, 0.55);
-  -webkit-backdrop-filter: blur(4px);
-          backdrop-filter: blur(4px);
+  background: rgba(11, 11, 15, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
   opacity: 0;
   transition: opacity 180ms ease-out;
 }
 .chat-modal-backdrop[hidden] {
-  display: none;
+  display: none !important;
 }
 .chat-modal-backdrop.is-open {
   opacity: 1;
 }
 
 .chat-modal {
-  width: min(640px, 100%);
-  height: min(680px, calc(100vh - 48px));
-  display: flex;
-  flex-direction: column;
+  width: min(420px, calc(100vw - 32px));
+  height: min(560px, calc(100dvh - 48px));
+  max-height: calc(100dvh - 48px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   background: var(--paper);
-  border: 1px solid var(--ink);
+  border: 2px solid var(--ink);
   box-shadow:
-    0 24px 60px -20px rgba(20, 18, 15, 0.55),
-    0 4px 12px -4px rgba(20, 18, 15, 0.25);
-  transform: scale(0.96) translateY(6px);
+    0 28px 80px -24px rgba(11, 11, 15, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  transform: scale(0.94) translateY(10px);
   opacity: 0;
   transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
               opacity 220ms ease-out;
   overflow: hidden;
+  contain: layout size;
 }
 .chat-modal-backdrop.is-open .chat-modal {
   transform: scale(1) translateY(0);
   opacity: 1;
 }
 
-/* The modal's header uses the same .console-head styling.
-   Close (×) button lives in the header, right-aligned. */
+.chat-modal .console-head {
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .chat-close {
   margin-left: auto;
   background: none;
@@ -398,50 +409,68 @@ body {
   outline-offset: 2px;
 }
 
-/* Scrollable thread region — this is what keeps the page from growing */
-.chat-thread-wrap {
-  flex: 1 1 auto;
+/* Middle pane — only this region scrolls */
+.chat-body {
   min-height: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(to right, rgba(11, 11, 15, 0.018) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(11, 11, 15, 0.018) 1px, transparent 1px),
+    var(--bone-2);
+  background-size: 20px 20px, 20px 20px, auto;
+}
+
+.chat-thread-wrap {
+  height: 100%;
   overflow-y: auto;
-  padding: 22px 24px 8px;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px 16px 8px;
   scrollbar-width: thin;
   scrollbar-color: var(--ink-5) transparent;
 }
-.chat-thread-wrap::-webkit-scrollbar { width: 8px; }
+.chat-thread-wrap::-webkit-scrollbar { width: 6px; }
 .chat-thread-wrap::-webkit-scrollbar-track { background: transparent; }
 .chat-thread-wrap::-webkit-scrollbar-thumb {
   background: var(--ink-5);
-  border-radius: 4px;
+  border-radius: 3px;
 }
-.chat-thread-wrap::-webkit-scrollbar-thumb:hover { background: var(--ink-4); }
 
-/* Pinned footer — chips + free-text form live here */
+/* Pinned footer — chips + input, capped so it can't blow out the frame */
 .chat-footer {
   flex-shrink: 0;
-  padding: 4px 24px 20px;
-  border-top: 1px solid var(--ink-6, rgba(20, 18, 15, 0.08));
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--ink-5);
   background: var(--paper);
+  max-height: 42%;
+  overflow-y: auto;
 }
-/* Neutralize the .hc-form top margin since chat-footer handles spacing */
-.chat-footer .hc-form { margin-top: 12px; }
-.chat-footer .hc-chips { padding: 12px 0 0; }
+.chat-footer .hc-form { margin-top: 10px; }
+.chat-footer .hc-chips { padding: 0; }
 
-/* Body scroll lock while modal is open */
 body.chat-open {
   overflow: hidden;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  right: 0;
 }
 
 @media (max-width: 720px) {
-  .chat-modal-backdrop { padding: 0; }
+  .chat-modal-backdrop {
+    padding: 0;
+    align-items: stretch;
+  }
   .chat-modal {
     width: 100%;
-    height: 100vh;
     height: 100dvh;
+    max-height: 100dvh;
     border-left: 0;
     border-right: 0;
+    border-top: 0;
   }
-  .chat-thread-wrap { padding: 18px 16px 6px; }
-  .chat-footer { padding: 4px 16px 16px; }
+  .chat-thread-wrap { padding: 14px 14px 6px; }
+  .chat-footer { padding: 8px 14px 14px; max-height: 46%; }
 }
 
 /* btn-mono kept (resume.html may use it, and the form submit needs a button class) */
@@ -945,18 +974,27 @@ sup.fn {
 }
 
 /* ============================================================
-   HERO CHAT — thread / chips / form (rendered inside .console)
+   CHAT — thread / chips / form (inside .chat-modal)
    ============================================================ */
 .hc-thread {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  min-height: 120px;
+  gap: 12px;
   font-family: var(--font-wiki);
-  font-size: 16px;
-  line-height: 1.55;
+  font-size: 15px;
+  line-height: 1.5;
 }
-.hc-row { display: flex; flex-direction: column; gap: 4px; }
+.hc-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 88%;
+}
+.hc-row-agent { align-self: flex-start; }
+.hc-row-user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
 .hc-row .who {
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -964,26 +1002,26 @@ sup.fn {
   font-weight: 600;
 }
 .hc-row-agent .who { color: var(--coral-deep); }
-.hc-row-user .who { color: var(--ink-2); }
+.hc-row-user .who { color: var(--ink-3); }
 .hc-row-agent p {
   color: var(--ink);
-  border-left: 2px solid var(--coral);
-  padding: 8px 14px;
-  background: var(--coral-tint);
+  border: 1px solid var(--ink-5);
+  padding: 10px 12px;
+  background: var(--paper);
 }
 .hc-row-agent p a {
   color: var(--coral-deep);
   border-bottom: 1px solid var(--coral-deep);
   text-decoration: none;
 }
-.hc-row-agent p a:hover { background: var(--paper); }
+.hc-row-agent p a:hover { background: var(--coral-tint); }
 .hc-row-agent p em { font-style: italic; color: var(--ink); }
 .hc-row-agent p strong { color: var(--ink); font-weight: 600; }
 .hc-row-user p {
-  color: var(--ink);
-  background: var(--bone-2);
-  border-left: 2px solid var(--ink);
-  padding: 8px 14px;
+  background: var(--ink);
+  color: var(--bone);
+  border: 1px solid var(--ink);
+  padding: 10px 12px;
 }
 .hc-row.thinking p::after {
   content: "▋";
@@ -997,16 +1035,16 @@ sup.fn {
 .hc-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 14px 0 4px;
+  gap: 6px;
+  padding: 0;
 }
 .hc-chip {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--ink);
   background: var(--bone);
   border: 1px solid var(--ink);
-  padding: 8px 14px;
+  padding: 7px 11px;
   cursor: pointer;
   letter-spacing: 0.02em;
   transition: background var(--t-fast), color var(--t-fast), transform var(--t-fast);

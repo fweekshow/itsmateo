@@ -468,14 +468,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeBtn = document.getElementById('closeChatBtn');
   let chatStarted = false;
   let lastFocused = null;
+  let scrollY = 0;
 
   function openChat() {
     if (!backdrop) return;
     lastFocused = document.activeElement;
+    scrollY = window.scrollY;
+    document.body.style.top = `-${scrollY}px`;
+
     backdrop.hidden = false;
+    backdrop.removeAttribute('hidden');
     backdrop.setAttribute('aria-hidden', 'false');
     document.body.classList.add('chat-open');
-    // Force a reflow so the transition plays from the initial state
     void backdrop.offsetHeight;
     backdrop.classList.add('is-open');
 
@@ -484,7 +488,6 @@ document.addEventListener('DOMContentLoaded', () => {
       chatStarted = true;
     }
 
-    // Focus the input if it's visible, otherwise the close button
     setTimeout(() => {
       const inp = input();
       if (inp && form()?.style.display !== 'none') {
@@ -501,8 +504,10 @@ document.addEventListener('DOMContentLoaded', () => {
     backdrop.classList.remove('is-open');
     backdrop.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('chat-open');
+    document.body.style.top = '';
     setTimeout(() => {
       backdrop.hidden = true;
+      window.scrollTo(0, scrollY);
       lastFocused?.focus?.();
     }, 200);
   }
