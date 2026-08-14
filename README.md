@@ -30,7 +30,7 @@ Optional:
 | `OPENAI_MODEL` | `gpt-4o-mini` | Override if you want a different model |
 | `PORT` | `8080` | Railway injects this automatically |
 
-Without `OPENAI_API_KEY` the site still serves; only the "Just curious" chat path returns a friendly fallback pointing to `mattm@beora.ai`.
+Without `OPENAI_API_KEY` the site still serves; only the "Just curious" chat path returns a friendly fallback pointing to `mateo@basemate.app`.
 
 ## Architecture
 

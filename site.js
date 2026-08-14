@@ -112,7 +112,7 @@ const FLOW = {
 
   // ── RECOVERY path ────────────────────────────────────────────
   recovery_msg: {
-    message: "Mateo runs a private intervention and sober companion practice. This is real and personal — not a bot intake. Reach him directly: <a href=\"mailto:mattm@beora.ai\">mattm@beora.ai</a> or <a href=\"mailto:meakin.matt@gmail.com\">meakin.matt@gmail.com</a>. He responds to recovery messages first.",
+    message: "Mateo runs a private intervention and sober companion practice. This is real and personal — not a bot intake. Reach him directly: <a href=\"mailto:mateo@basemate.app\">mateo@basemate.app</a> or <a href=\"mailto:meakin.matt@gmail.com\">meakin.matt@gmail.com</a>. He responds to recovery messages first.",
     terminal: true,
   },
 
@@ -175,7 +175,10 @@ function addTyping() {
 
 function clearChips() { chipBox().innerHTML = ''; }
 function showForm(show) {
-  form().style.display = show ? '' : 'none';
+  const f = form();
+  const footer = document.getElementById('chatFooter');
+  if (f) f.style.display = show ? '' : 'none';
+  if (footer) footer.hidden = !show;
   if (show) setTimeout(() => input().focus(), 60);
 }
 
@@ -233,6 +236,8 @@ async function advance(nextStep) {
     await sleep(550);
     typing.remove();
     renderConsultCTA();
+    showForm(true);
+    input().placeholder = "or type a note";
     setBusy(false);
     return;
   }
@@ -327,7 +332,7 @@ async function onSubmit(e) {
       }
     } catch (err) {
       typing.remove();
-      addRow({ who: 'agent', html: "Agent's offline. Email mattm@beora.ai." });
+      addRow({ who: 'agent', html: "Agent's offline. Email mateo@basemate.app." });
     }
     setBusy(false);
     return;
@@ -345,15 +350,15 @@ async function answerQuestion(question) {
       body: JSON.stringify({ question }),
     });
     if (res.status === 429) {
-      return "Whoa — too many questions in a short window. Try again in a bit, or just email mattm@beora.ai.";
+      return "Whoa — too many questions in a short window. Try again in a bit, or just email mateo@basemate.app.";
     }
     if (!res.ok) {
-      return "Agent's offline right now. Email mattm@beora.ai and Mateo will reply personally.";
+      return "Agent's offline right now. Email mateo@basemate.app and Mateo will reply personally.";
     }
     const data = await res.json();
-    return data.reply || "No reply from the agent — try again, or email mattm@beora.ai.";
+    return data.reply || "No reply from the agent — try again, or email mateo@basemate.app.";
   } catch (err) {
-    return "Couldn't reach the agent. Email mattm@beora.ai instead.";
+    return "Couldn't reach the agent. Email mateo@basemate.app instead.";
   }
 }
 
@@ -420,15 +425,15 @@ function renderConsultCTA() {
     <p class="hcc-summary">${escape(summary)}</p>
     <p class="hcc-ask">Would you like to set up a consult with Matthew?</p>
     <div class="hcc-actions">
-      <a class="hcc-btn primary" href="mailto:mattm@beora.ai?subject=${subjConsult}&body=${body}">
+      <a class="hcc-btn primary" href="mailto:mateo@basemate.app?subject=${subjConsult}&body=${body}">
         → Yes, let's talk
       </a>
-      <a class="hcc-btn ghost" href="mailto:mattm@beora.ai?subject=${subjEmail}&body=${body}">
+      <a class="hcc-btn ghost" href="mailto:mateo@basemate.app?subject=${subjEmail}&body=${body}">
         Send an email instead
       </a>
     </div>
     <div class="hcc-foot mono small">
-      lands directly in mattm@beora.ai · expect a reply within 24h
+      lands directly in mateo@basemate.app · expect a reply within 24h
     </div>
   `;
   thread().appendChild(card);

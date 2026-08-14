@@ -365,7 +365,7 @@ button.ch-primary:focus-visible {
   height: min(600px, calc(100dvh - 48px));
   max-height: calc(100dvh - 48px);
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) minmax(min-content, 50%);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   background: var(--paper);
   border: 2px solid var(--ink);
   box-shadow:
@@ -411,6 +411,8 @@ button.ch-primary:focus-visible {
 /* Middle pane — only this region scrolls */
 .chat-body {
   min-height: 0;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   background:
     linear-gradient(to right, rgba(11, 11, 15, 0.018) 1px, transparent 1px),
@@ -435,27 +437,26 @@ button.ch-primary:focus-visible {
   border-radius: 3px;
 }
 
-/* Pinned footer — chips + input. min-content so Safari can't
-   squeeze this grid row below the buttons (overflow:auto would
-   otherwise drop the automatic minimum to 0 and clip them). */
+/* Pinned composer — only this row sits on the bottom of the frame.
+   Chips live in the thread so they sit under the last message. */
 .chat-footer {
-  min-height: min-content;
-  padding: 14px 16px 22px;
-  padding-bottom: max(22px, env(safe-area-inset-bottom, 0px));
+  min-height: 0;
+  padding: 10px 16px 14px;
+  padding-bottom: max(14px, env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--ink-5);
-  background: var(--bone);
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  background: var(--paper);
 }
-.chat-footer .hc-form { margin-top: 10px; }
-.chat-footer .hc-chips {
+.chat-footer[hidden] { display: none !important; }
+.chat-footer .hc-form { margin-top: 0; }
+
+.chat-thread-wrap .hc-chips {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 0;
+  padding: 8px 0 12px;
 }
-.chat-footer .hc-chip {
+.chat-thread-wrap .hc-chips:empty { display: none; }
+.chat-thread-wrap .hc-chip {
   width: 100%;
   text-align: left;
   font-size: 12px;
@@ -467,14 +468,14 @@ button.ch-primary:focus-visible {
   border: 2px solid var(--ink);
   box-shadow: 0 1px 0 rgba(11, 11, 15, 0.06);
 }
-.chat-footer .hc-chip:hover {
+.chat-thread-wrap .hc-chip:hover {
   background: var(--coral);
   border-color: var(--coral);
   color: var(--paper);
   transform: none;
   box-shadow: 0 4px 12px -6px rgba(224, 97, 72, 0.55);
 }
-.chat-footer .hc-chip:active {
+.chat-thread-wrap .hc-chip:active {
   background: var(--coral-deep);
   border-color: var(--coral-deep);
 }
@@ -502,8 +503,8 @@ body.chat-open {
   }
   .chat-thread-wrap { padding: 14px 14px 6px; }
   .chat-footer {
-    padding: 14px 14px 24px;
-    padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+    padding: 10px 14px 16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
   }
 }
 

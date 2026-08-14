@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="site.css?v=6" />
+<link rel="stylesheet" href="site.css?v=7" />
 </head>
 <body>
 
@@ -51,9 +51,9 @@
               <span class="arrow" aria-hidden="true">→</span>
             </button>
             <div class="ch-secondaries mono small">
-              <a href="resume.pdf" download="Matthew-Ross-Meakin-Resume.pdf">resume.pdf</a>
+              <a href="resume.pdf" download="Mateo_Resume_v.1.1.pdf">resume.pdf</a>
               <span class="sep">·</span>
-              <a href="mailto:mattm@beora.ai">mattm@beora.ai</a>
+              <a href="mailto:mateo@basemate.app">mateo@basemate.app</a>
             </div>
           </div>
         </div>
@@ -177,7 +177,7 @@
             As of 2026 the US node is live on iMessage, RCS, and Base App, with Apple Pay and card funding, send-to-phone-number, automatic yield on idle USDC, and spot swaps in chat. Public product metrics show 12,000+ users and 64,000+ messages handled. WhatsApp receive-side and multi-corridor remittance rails are in progress. A seed data room is published at <a href="https://basemate.app/deck" target="_blank" rel="noopener">basemate.app/deck</a>.
           </p>
           <p>
-            Basemate is currently in <a href="https://www.circuitcu.com/accelerator" target="_blank" rel="noopener">Circuit Accelerator</a>, a credit-union innovation program, and was previously accepted into <em>Base Batches 002</em>, Coinbase's onchain startup accelerator.<sup class="fn">[3]</sup> Earlier work through the company includes two <a href="#agents">official onchain AI agents</a> built for Coinbase and deployed at the company's flagship developer events.
+            Basemate is currently in Circuit Accelerator, a credit-union innovation program, and was previously accepted into <em>Base Batches 002</em>, Coinbase's onchain startup accelerator.<sup class="fn">[3]</sup> Earlier work through the company includes two <a href="#agents">official onchain AI agents</a> built for Coinbase and deployed at the company's flagship developer events.
           </p>
           <table class="wiki-table compact">
             <thead><tr><th>Surface</th><th>What shipped</th></tr></thead>
@@ -347,11 +347,10 @@
         <li>U.S. 42 CFR Part 2 — confidentiality of substance use disorder patient records.</li>
         <li>DevConnect — Ethereum developer convening.</li>
         <li>Overdose LA — Los Angeles harm-reduction outreach.</li>
-        <li><a href="https://www.circuitcu.com/accelerator" target="_blank" rel="noopener">circuitcu.com/accelerator</a> — Circuit Accelerator.</li>
         <li><a href="https://basemate.app/deck" target="_blank" rel="noopener">basemate.app/deck</a> — Basemate seed data room.</li>
       </ol>
       <p class="ext-links mono small">
-        external · <a href="https://github.com/fweekshow">github.com/fweekshow</a> · <a href="https://linkedin.com/in/matthew-meakin-72592219a">linkedin</a> · mailto · <a href="mailto:mattm@beora.ai">mattm@beora.ai</a>
+        external · <a href="https://github.com/fweekshow">github.com/fweekshow</a> · <a href="https://linkedin.com/in/matthew-meakin-72592219a">linkedin</a> · mailto · <a href="mailto:mateo@basemate.app">mateo@basemate.app</a>
       </p>
 
     </article>
@@ -379,14 +378,14 @@
           <a href="https://beora.care">beora.care</a>
           <a href="https://github.com/fweekshow">github · fweekshow</a>
           <a href="https://linkedin.com/in/matthew-meakin-72592219a">linkedin</a>
-          <a href="mailto:mattm@beora.ai">mattm@beora.ai</a>
+          <a href="mailto:mateo@basemate.app">mateo@basemate.app</a>
         </div>
       </div>
 
       <div class="sb-block sb-pdf">
         <div class="mono small soft">// printable</div>
         <p>Need to send this around? There's a one-page PDF version.</p>
-        <a href="resume.pdf" download="Matthew-Ross-Meakin-Resume.pdf" class="btn-mono full">↓ Download · 1-page PDF</a>
+        <a href="resume.pdf" download="Mateo_Resume_v.1.1.pdf" class="btn-mono full">↓ Download · 1-page PDF</a>
       </div>
 
       <div class="sb-block sb-affils">
@@ -458,11 +457,11 @@
     <div class="chat-body">
       <div class="chat-thread-wrap">
         <div class="hc-thread" id="hcThread" aria-live="polite"></div>
+        <div class="hc-chips" id="hcChips"></div>
       </div>
     </div>
-    <div class="chat-footer">
-      <div class="hc-chips" id="hcChips"></div>
-      <form class="hc-form" id="hcForm" style="display:none">
+    <div class="chat-footer" id="chatFooter" hidden>
+      <form class="hc-form" id="hcForm">
         <span class="mono soft prompt">&gt;</span>
         <input id="hcInput" type="text" autocomplete="off" placeholder="type your answer" />
         <button type="submit" class="btn-coral">
@@ -474,6 +473,6 @@
   </div>
 </div>
 
-<script src="site.js?v=6" defer></script>
+<script src="site.js?v=7" defer></script>
 </body>
 </html>

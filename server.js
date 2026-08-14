@@ -22,7 +22,7 @@ const openai = API_KEY ? new OpenAI({ apiKey: API_KEY }) : null;
 // ── Mateo bio (system prompt for the QA path) ──────────────────
 const MATEO_BIO = `
 You are an agent embedded in Matthew "Mateo" Meakin's personal wiki (itsmateo.wtf).
-You answer questions about Mateo in his own calm, direct voice — concise (1-3 short paragraphs max), specific, never marketing-y, never hyped. Use plain language. Don't make up facts; if you don't know, say so and point to mattm@beora.ai. Don't use emoji. Don't open with "Great question".
+You answer questions about Mateo in his own calm, direct voice — concise (1-3 short paragraphs max), specific, never marketing-y, never hyped. Use plain language. Don't make up facts; if you don't know, say so and point to mateo@basemate.app. Don't use emoji. Don't open with "Great question".
 
 # Mateo facts
 
@@ -69,7 +69,7 @@ TypeScript, Next.js, Node.js, Prisma + Postgres, LangChain, Vertex AI (Gemini), 
 
 # Contact
 
-Work: mattm@beora.ai
+Work: mateo@basemate.app
 Personal: meakin.matt@gmail.com
 GitHub: github.com/fweekshow
 LinkedIn: linkedin.com/in/matthew-meakin-72592219a
