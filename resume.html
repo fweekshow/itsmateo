@@ -46,7 +46,7 @@ html, body {
   min-height: 1056px;
   margin: 0 auto;
   background: var(--paper);
-  padding: 44px 56px 44px;
+  padding: 22px 44px 18px;
   position: relative;
 }
 
@@ -62,7 +62,7 @@ html, body {
   color: var(--ink-3);
   padding-bottom: 6px;
   border-bottom: 1px solid var(--ink-5);
-  margin-bottom: 18px;
+  margin-bottom: 8px;
 }
 .chrome .ns { color: var(--ink); font-weight: 600; }
 .chrome .live { display: inline-flex; align-items: center; gap: 6px; color: var(--signal-crit); }
@@ -82,7 +82,7 @@ html, body {
 .title-block h1 {
   font-family: var(--font-wiki);
   font-weight: 500;
-  font-size: 40px;
+  font-size: 32px;
   line-height: 1.05;
   letter-spacing: -0.015em;
   color: var(--ink);
@@ -105,12 +105,12 @@ html, body {
   display: grid;
   grid-template-columns: 1fr 262px;
   gap: 22px;
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 /* Article */
-article { font-size: 14.5px; line-height: 1.55; color: var(--ink); }
-article p { margin-bottom: 9px; }
+article { font-size: 12.75px; line-height: 1.4; color: var(--ink); }
+article p { margin-bottom: 6px; }
 article p .lede {
   font-weight: 600;
 }
@@ -133,11 +133,11 @@ sup.fn {
 article h2 {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 17px;
+  font-size: 15px;
   letter-spacing: -0.005em;
   border-bottom: 1px solid var(--ink-5);
   padding-bottom: 3px;
-  margin: 16px 0 8px;
+  margin: 8px 0 4px;
   color: var(--ink);
   display: flex;
   justify-content: space-between;
@@ -199,7 +199,7 @@ article h2 .edit {
   display: grid;
   grid-template-columns: 92px 1fr;
   gap: 14px;
-  padding: 7px 0;
+  padding: 4px 0;
   border-bottom: 1px dotted var(--ink-5);
 }
 .role:last-child { border-bottom: none; }
@@ -275,10 +275,10 @@ article h2 .edit {
 }
 .infobox .photo {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   background: var(--bone-3);
   border: 1px solid var(--ink-5);
-  background-image: url("assets/mateo-1.avif");
+  background-image: url("assets/mateo-1.jpg");
   background-size: cover;
   background-position: 50% 25%;
 }
@@ -342,8 +342,8 @@ article h2 .edit {
 
 /* Footer — references */
 .refs {
-  margin-top: 18px;
-  padding-top: 10px;
+  margin-top: 12px;
+  padding-top: 8px;
   border-top: 1px solid var(--ink-5);
   font-family: var(--font-mono);
   font-size: 10px;
@@ -357,11 +357,11 @@ article h2 .edit {
   color: var(--ink);
   margin-bottom: 4px;
 }
-.refs ol { list-style: none; counter-reset: r; }
+.refs ol { list-style: none; counter-reset: r; display: flex; flex-wrap: wrap; gap: 0 14px; }
 .refs li {
   counter-increment: r;
   display: flex;
-  gap: 8px;
+  gap: 6px;
   padding: 1px 0;
 }
 .refs li::before {
@@ -373,7 +373,7 @@ article h2 .edit {
 
 /* Hatfoot — page footer with edit-style metadata */
 .hatfoot {
-  margin-top: 14px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   font-family: var(--font-mono);
@@ -390,8 +390,9 @@ article h2 .edit {
 }
 
 @media print {
-  html, body { background: white; }
-  .page { box-shadow: none; padding: 32px 44px; min-height: auto; }
+  html, body { background: white; width: 100%; margin: 0; padding: 0; }
+  html { zoom: 0.88; }
+  .page { width: 100%; box-shadow: none; padding: 0.32in 0.48in 0.22in; min-height: auto; }
   @page { size: letter; margin: 0; }
 }
 </style>
@@ -402,7 +403,7 @@ article h2 .edit {
 
   <div class="chrome">
     <div><span class="ns">PERSON</span> · article · talk · history · watch</div>
-    <div class="live"><span class="dot"></span> last edit · 2026·05·26</div>
+    <div class="live"><span class="dot"></span> last edit · 2026·08·14</div>
   </div>
 
   <div class="title-block">
@@ -416,24 +417,23 @@ article h2 .edit {
     <article>
 
       <p>
-        <span class="lede">Matthew Ross Meakin</span> (also <em>Mateo</em>; b. Los Angeles) is an American founder, software engineer, and recovery operator. He is the founder and CTO of <a href="https://beora.care">Beora Care</a><sup class="fn">[1]</sup>, a HIPAA‑compliant clinical platform for behavioral health, and the founder of <a href="https://basemate.app">Basemate</a><sup class="fn">[2]</sup>, accepted into Base Batches 002, Coinbase's onchain accelerator.<sup class="fn">[3]</sup>
+        <span class="lede">Matthew Ross Meakin</span> (also <em>Mateo</em>; b. Los Angeles) is an American founder and self‑taught engineer. He is the founder and CEO of <a href="https://basemate.app">Basemate</a><sup class="fn">[2]</sup>, a messaging network for stablecoins on Base, currently in Circuit Accelerator and previously Base Batches 002, Coinbase's onchain accelerator.<sup class="fn">[3]</sup> He is also founder &amp; CTO of <a href="https://beora.care">Beora Care</a><sup class="fn">[1]</sup>, a HIPAA‑compliant clinical platform for behavioral health. He entered addiction treatment as a patient on scholarship after homelessness on Skid Row, taught himself to code, and became the facility's CTO.
       </p>
-      <p>
-        Meakin entered the addiction‑treatment industry as a patient on scholarship after a period of homelessness on Skid Row. He advanced through every clinical and operational role at the facility — Technician, Med Room Manager, Director of Operations — and taught himself to code, eventually serving as the organization's Chief Technology Officer. He is self‑taught, with no formal computer‑science background.
-      </p>
-
-      <div class="contents">
-        <div class="ch">Contents <span style="float:right;font-family:var(--font-wiki);text-transform:none;letter-spacing:0;color:var(--ink-3);">[hide]</span></div>
-        <ol>
-          <li><a href="#now">Current work</a></li>
-          <li><a href="#career">Career</a></li>
-          <li><a href="#community">Community</a></li>
-          <li><a href="#refs">References &amp; external links</a></li>
-        </ol>
-      </div>
 
       <h2 id="now">Current work <span class="edit">[ edit ]</span></h2>
       <div class="roles">
+        <div class="role">
+          <div class="when">2023 – present</div>
+          <div class="what">
+            <div class="title">Founder &amp; CEO — Basemate</div>
+            <div class="org">Circuit Accelerator · Base Batches 002 (Coinbase) · iMessage · Base App · XMTP · Base L2</div>
+            <div class="desc">
+              <span class="tag">Live</span>
+              <span class="tag">Agents</span>
+              The messaging network for stablecoins. Text a Mate number — a wallet is created. Send USDC to any phone, earn ~5%, swap, and save — no app, no seed phrase. Live on iMessage, RCS, and Base App. 12K+ users. Built two <strong>official Coinbase onchain agents</strong>, live at <em>Base Camp</em> and <em>DevConnect</em>.
+            </div>
+          </div>
+        </div>
         <div class="role">
           <div class="when">2024 – present</div>
           <div class="what">
@@ -441,19 +441,7 @@ article h2 .edit {
             <div class="org">CareWiki + Beora iOS · TypeScript · LangChain · Vertex AI · XMTP</div>
             <div class="desc">
               <span class="tag">PHI</span>
-              AI platform for addiction recovery programs. Designed a three‑tier PHI architecture enforcing 42 CFR Part 2; built a human‑in‑the‑loop review pipeline with clinician trust graduation. Built from lived experience, not a case study.
-            </div>
-          </div>
-        </div>
-        <div class="role">
-          <div class="when">2023 – present</div>
-          <div class="what">
-            <div class="title">Founder — Basemate</div>
-            <div class="org">Base Batches 002 (Coinbase) · onchain agents · Base L2</div>
-            <div class="desc">
-              <span class="tag">Onchain</span>
-              <span class="tag">Agents</span>
-              Tooling for onchain developers on Base L2. Built and shipped two <strong>official onchain AI agents for Coinbase</strong> — deployed and used live at <em>Base Camp</em> and <em>DevConnect</em>.
+              AI platform for addiction recovery. Three‑tier PHI architecture enforcing 42 CFR Part 2; human‑in‑the‑loop review with clinician trust graduation. Built from lived experience, not a case study.
             </div>
           </div>
         </div>
@@ -462,7 +450,7 @@ article h2 .edit {
           <div class="what">
             <div class="title">Interventionist &amp; Sober Companion</div>
             <div class="org">Self‑employed · Los Angeles, CA</div>
-            <div class="desc">Private 1‑on‑1 recovery support for high‑profile clients. Crisis interventions, treatment placement, post‑discharge continuity of care.</div>
+            <div class="desc">Private 1‑on‑1 recovery support for high‑profile clients — crisis intervention, treatment placement, post‑discharge care.</div>
           </div>
         </div>
       </div>
@@ -475,10 +463,7 @@ article h2 .edit {
             <div class="title">Chief Technology Officer — Evergreen Fund</div>
             <div class="org">Los Angeles, CA · also Director of Operations, Med Room Manager, Technician</div>
             <div class="desc">
-              Entered the facility as a patient on scholarship; never left. Advanced through every operational role over three years.
-              <strong>As CTO:</strong> owned all technology and led digital transformation, self‑taught.
-              <strong>As Director of Operations:</strong> day‑to‑day operations, staffing, clinical workflow.
-              <strong>As Med Room Manager:</strong> controlled‑substance inventory, DEA compliance, distribution protocols.
+              Entered as a patient on scholarship; never left. Advanced Technician → Med Room Manager → Director of Operations → CTO. Owned all technology, self‑taught; DEA‑compliant controlled‑substance inventory.
             </div>
           </div>
         </div>
@@ -487,44 +472,29 @@ article h2 .edit {
           <div class="what">
             <div class="title">Transportation Captain &amp; Driver</div>
             <div class="org">Teamsters Hollywood Local 399 · Los Angeles, CA</div>
-            <div class="desc">On‑set logistics, scheduling, and multi‑vehicle transportation. Productions include <em>The Matrix Resurrections</em> (Warner Bros.), <em>Grace &amp; Frankie</em> (Netflix), national Walmart commercial campaigns.</div>
-          </div>
-        </div>
-        <div class="role">
-          <div class="when">early career</div>
-          <div class="what">
-            <div class="title">Art Department — HBO's <em>Deadwood</em></div>
-            <div class="org">Hollywood, CA</div>
-            <div class="desc">Left high school at sixteen to join the Art Department on HBO's <em>Deadwood</em>. Attended California Institute of the Arts (CalArts) thereafter.</div>
+            <div class="desc">On‑set logistics. <em>The Matrix Resurrections</em>, <em>Grace &amp; Frankie</em>, national Walmart campaigns. Left high school at sixteen for HBO's <em>Deadwood</em> Art Department; attended CalArts thereafter.</div>
           </div>
         </div>
       </div>
 
-      <h2 id="community">Community <span class="edit">[ edit ]</span></h2>
-      <div class="roles">
-        <div class="role">
-          <div class="when">ongoing</div>
-          <div class="what">
-            <div class="title">Founder — Overdose LA</div>
-            <div class="org">Street‑level harm reduction · Los Angeles, CA</div>
-            <div class="desc">Founded and operates a street‑level outreach program distributing food, naloxone, and clean equipment to unhoused individuals in Los Angeles.</div>
-          </div>
-        </div>
-      </div>
+      <p>
+        Founder of <strong>Overdose LA</strong> — street‑level harm reduction in Los Angeles (food, naloxone, clean equipment).
+      </p>
 
       <div class="refs" id="refs">
-        <div class="ref-head">References &amp; external links</div>
+        <div class="ref-head">References</div>
         <ol>
-          <li><a href="https://beora.care">beora.care</a> — Beora Care, clinical platform.</li>
-          <li><a href="https://basemate.app">basemate.app</a> — Basemate, onchain developer tooling.</li>
-          <li><a href="https://www.base.org/build/base-batches">base.org/build/base-batches</a> — Base Batches accelerator (Coinbase).</li>
+          <li><a href="https://beora.care">beora.care</a></li>
+          <li><a href="https://basemate.app">basemate.app</a></li>
+          <li><a href="https://www.circuitcu.com/accelerator">circuitcu.com/accelerator</a></li>
+          <li><a href="https://www.base.org/build/base-batches">base.org/build/base-batches</a></li>
           <li><a href="https://github.com/fweekshow">github.com/fweekshow</a> · <a href="https://linkedin.com/in/matthew-meakin-72592219a">LinkedIn</a></li>
         </ol>
       </div>
 
       <div class="hatfoot">
         <div>itsmateo.wtf · personal knowledge base</div>
-        <div>v2026.05 · cc by‑sa</div>
+        <div>v2026.08 · cc by‑sa</div>
       </div>
 
     </article>
@@ -544,21 +514,21 @@ article h2 .edit {
           <dd>Los Angeles, CA</dd>
           <dt>Occupation</dt>
           <dd>
-            Founder, CTO
-            <span class="small">behavioral health · web3 · AI</span>
+            Founder, CEO
+            <span class="small">money in texts · behavioral health · AI</span>
           </dd>
           <dt>Known for</dt>
           <dd>
-            Beora Care<br />
-            Basemate · Overdose LA
+            Basemate<br />
+            Beora Care · Overdose LA
           </dd>
           <dt>Years sober</dt>
           <dd>5+ <span class="small">est. 2021</span></dd>
           <dt>Stack</dt>
           <dd style="font-family:var(--font-mono);font-size:10.5px;line-height:1.55;">
-            TypeScript · Next.js · Prisma<br />
-            LangChain · Vertex AI<br />
-            XMTP · GCP · Base L2
+            TypeScript · XMTP · iMessage<br />
+            LangChain · Coinbase CDP<br />
+            Postgres · Base L2 · Next.js
           </dd>
           <dt>Contact</dt>
           <dd style="font-family:var(--font-mono);font-size:10.5px;line-height:1.6;">

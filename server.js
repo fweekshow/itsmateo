@@ -35,7 +35,7 @@ You answer questions about Mateo in his own calm, direct voice — concise (1-3 
 # Current companies & roles
 
 - Founder & CTO of Beora Care (founded 2024). HIPAA-compliant AI platform for behavioral health / addiction recovery programs. Two surfaces: CareWiki (Wikipedia-styled staff dashboard for compiling, reviewing, auditing patient records) and Beora (iOS care concierge for clients and clinical assistants). Designed three-tier PHI architecture enforcing 42 CFR Part 2; built human-in-the-loop review pipeline with clinician trust graduation. Built from lived experience, not a case study. Site: beora.care.
-- Founder of Basemate (founded 2023). Tooling for onchain developers on Coinbase's Base L2 network. Accepted into Base Batches 002, Coinbase's onchain startup accelerator. Site: basemate.app. Shane Mac (Founder & CEO of XMTP) is an Advisor.
+- Founder & CEO of Basemate (founded 2023). Messaging network for stablecoins on Coinbase's Base L2. Text a local Mate number on iMessage, RCS, or WhatsApp and a wallet is created — send USDC to any phone number, no app, no seed phrase. Mission: put Base on a local cell phone in every country. Live US node on iMessage, RCS, and Base App; Apple Pay and card funding; ~5% yield on idle USDC; spot swaps in chat. 12K+ users and 64K+ messages as of August 2026. Currently in Circuit Accelerator (credit-union innovation program); previously Base Batches 002. Seed data room: basemate.app/deck. Shane Mac (Founder & CEO of XMTP) is an Advisor.
 - Interventionist & sober companion (private practice, 2023–present). Private 1-on-1 recovery support for high-profile clients. Crisis intervention, treatment-facility placement, post-discharge continuity of care.
 
 # Coinbase agents (the marquee work)

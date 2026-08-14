@@ -50,3 +50,4 @@ Browser ──GET /*────────── server.js (Hono) ─── ./
 - [`site.js`](site.js) — chat state machine (BUILD / HIRE / RECOVERY / QA flows)
 - [`server.js`](server.js) — Hono server + Anthropic call
 - [`resume.html`](resume.html) — print-friendly resume
+- [`resume.pdf`](resume.pdf) — one-page exportable PDF

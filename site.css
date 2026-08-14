@@ -362,10 +362,10 @@ button.ch-primary:focus-visible {
 
 .chat-modal {
   width: min(420px, calc(100vw - 32px));
-  height: min(560px, calc(100dvh - 48px));
+  height: min(600px, calc(100dvh - 48px));
   max-height: calc(100dvh - 48px);
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) minmax(min-content, 50%);
   background: var(--paper);
   border: 2px solid var(--ink);
   box-shadow:
@@ -376,7 +376,6 @@ button.ch-primary:focus-visible {
   transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
               opacity 220ms ease-out;
   overflow: hidden;
-  contain: layout size;
 }
 .chat-modal-backdrop.is-open .chat-modal {
   transform: scale(1) translateY(0);
@@ -436,14 +435,18 @@ button.ch-primary:focus-visible {
   border-radius: 3px;
 }
 
-/* Pinned footer — chips + input, capped so it can't blow out the frame */
+/* Pinned footer — chips + input. min-content so Safari can't
+   squeeze this grid row below the buttons (overflow:auto would
+   otherwise drop the automatic minimum to 0 and clip them). */
 .chat-footer {
-  flex-shrink: 0;
-  padding: 12px 16px 16px;
+  min-height: min-content;
+  padding: 14px 16px 22px;
+  padding-bottom: max(22px, env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--ink-5);
   background: var(--bone);
-  max-height: 42%;
+  overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .chat-footer .hc-form { margin-top: 10px; }
 .chat-footer .hc-chips {
@@ -498,7 +501,10 @@ body.chat-open {
     border-top: 0;
   }
   .chat-thread-wrap { padding: 14px 14px 6px; }
-  .chat-footer { padding: 8px 14px 14px; max-height: 46%; }
+  .chat-footer {
+    padding: 14px 14px 24px;
+    padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* btn-mono kept (resume.html may use it, and the form submit needs a button class) */
