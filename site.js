@@ -9,7 +9,7 @@
 // step: { message, chips?: [{label, value, next}], freeText?: {key, placeholder, next}, terminal? }
 const FLOW = {
   root: {
-    message: "Hey. I'm Mateo. I built clinical AI for addiction recovery, shipped onchain agents for Coinbase, and run a private intervention practice. What's going on for you?",
+    message: "Hey. I'm Mateo. I built clinical AI for addiction recovery, shipped AI agents for Coinbase, and run a private intervention practice. What's going on for you?",
     chips: [
       { label: "I'm building something", value: "building", next: "build_q1" },
       { label: "I want to hire or work with you", value: "hire", next: "hire_q1" },
