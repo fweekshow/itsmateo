@@ -819,11 +819,12 @@ sup.fn {
   width: 56px;
 }
 .cc-logo-pegger {
-  background-image: url("assets/pegger-logo.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #FAFAF7;
+  background: #fff;
+}
+.cc-logo-pegger img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* ============================================================
@@ -1876,11 +1877,10 @@ sup.fn {
   background-position: center;
 }
 .affil-pegger {
-  background-image: url("assets/pegger-logo.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #FAFAF7;
+  background: #fff;
+}
+.affil-pegger img {
+  object-fit: contain;
 }
 .affil-body { min-width: 0; flex: 1; }
 .affil-name {
