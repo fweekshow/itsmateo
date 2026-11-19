@@ -73,7 +73,7 @@ TypeScript, Next.js, Node.js, Bun, Elysia, Prisma + Postgres, PGlite, LangChain,
 Work: mateo@basemate.app
 Personal: meakin.matt@gmail.com
 GitHub: github.com/fweekshow
-LinkedIn: linkedin.com/in/matthew-meakin-72592219a
+X: x.com/0xteo
 `.trim();
 
 // ── Rate limit: in-memory sliding window per IP ────────────────
